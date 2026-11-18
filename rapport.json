@@ -1,74 +1,74 @@
 {
-  "maj": "2026-11-18T14:35:00+01:00",
+  "maj": "2026-11-18T14:43:00+01:00",
+  "verdict": "Non validée",
+  "colonnes": [
+    "capture",
+    "versions",
+    "suggestion"
+  ],
   "constats": [
     {
       "id": 1,
-      "titre": "Non validée",
+      "titre": "Date à déplacer hors du champ Lieu",
       "statut": "ouvert",
-      "commentaire": "Non validée : date affichée à côté du lieu, actions hors de portée du pouce en mobile, aperçu photo coupé, Annuler sans confirmation, menu d’assignation illisible et priorité sans choix visibles."
+      "capture": "captures/002.png",
+      "versions": "Mobile et standard (1024, 1180), tous rôles",
+      "suggestion": "En suspens (décision de Napoléon). Piste : déplacer la date et l'heure hors du champ Lieu, pour qu'elles ne passent pas pour une valeur saisie.",
+      "commentaire": "Mobile et standard (1024, 1180), tous rôles. En suspens (décision de Napoléon). Piste : déplacer la date et l'heure hors du champ Lieu, pour qu'elles ne passent pas pour une valeur saisie."
     },
     {
       "id": 2,
-      "titre": "Date à déplacer hors du champ Lieu",
-      "vue": "standard",
-      "gravite": "majeur",
+      "titre": "Actions hors de portée du pouce",
       "statut": "ouvert",
-      "capture": "captures/002.png",
-      "commentaire": "**Déplacer la date et l'heure**, demandées par Napoléon, hors du champ Lieu : à cet endroit, elles passent pour une valeur déjà saisie. Constaté pour les trois rôles, en standard (1024 et 1180) comme en mobile."
+      "capture": "captures/003.png",
+      "versions": "Mobile 390, tous rôles",
+      "suggestion": "Placer Nouvelle intervention, Suivant et Créer et publier en bas d'écran, à portée du pouce, avec 44 px de haut.",
+      "commentaire": "Mobile 390, tous rôles. Placer Nouvelle intervention, Suivant et Créer et publier en bas d'écran, à portée du pouce, avec 44 px de haut."
     },
     {
       "id": 3,
-      "titre": "Actions hors de portée du pouce",
-      "vue": "mobile",
-      "gravite": "majeur",
+      "titre": "Aperçu photo coupé",
       "statut": "ouvert",
-      "capture": "captures/003.png",
-      "commentaire": "Placer les actions principales en bas de l’écran, à portée du pouce, et porter le bouton d’accueil à 44 px de haut. En mobile (390), « Nouvelle intervention » est tout en haut et ne fait que 32 px, et Suivant / Créer et publier restent dans le tiers supérieur, le bas de l’écran restant vide."
+      "capture": "captures/004.png",
+      "versions": "Mobile et standard, tous rôles",
+      "suggestion": "Afficher la photo entière partout, comme sur la version déjà corrigée. Garder la croix à sa taille actuelle.",
+      "commentaire": "Mobile et standard, tous rôles. Afficher la photo entière partout, comme sur la version déjà corrigée. Garder la croix à sa taille actuelle."
     },
     {
       "id": 4,
-      "titre": "Aperçu photo coupé",
-      "vue": "standard",
-      "gravite": "majeur",
+      "titre": "Annuler ferme sans confirmation",
       "statut": "ouvert",
-      "capture": "captures/004.png",
-      "commentaire": "Afficher l’aperçu de la photo en entier, sans la rogner, et agrandir la croix de suppression (22 px). La vignette carrée coupe les bords d’une photo 800×500 ; même défaut en mobile et en standard, pour les trois rôles."
+      "capture": "captures/005.png",
+      "versions": "Réceptionniste, mobile et standard",
+      "suggestion": "Aligner sur le profil validé : Annuler demande confirmation, comme Fermer. Uniformiser tous les profils sauf différence justifiée par le rôle.",
+      "commentaire": "Réceptionniste, mobile et standard. Aligner sur le profil validé : Annuler demande confirmation, comme Fermer. Uniformiser tous les profils sauf différence justifiée par le rôle."
     },
     {
       "id": 5,
-      "titre": "Annuler ferme sans confirmation",
-      "vue": "mobile",
-      "gravite": "majeur",
+      "titre": "Menu d’assignation illisible",
       "statut": "ouvert",
-      "capture": "captures/005.png",
-      "commentaire": "Faire confirmer aussi le bouton Annuler dès qu’il y a une saisie. Chez la réceptionniste, Annuler ferme tout de suite et perd le contenu, alors que le bouton Fermer demande confirmation — en mobile (390) et en standard (1024 et 1180)."
+      "capture": "captures/006.png",
+      "versions": "Responsable technique, mobile et standard",
+      "suggestion": "Garder la mise en avant du profil choisi, mais ouvrir la liste sans recouvrir les autres champs, avec des noms plus contrastés.",
+      "commentaire": "Responsable technique, mobile et standard. Garder la mise en avant du profil choisi, mais ouvrir la liste sans recouvrir les autres champs, avec des noms plus contrastés."
     },
     {
       "id": 6,
-      "titre": "Menu d’assignation illisible",
-      "vue": "mobile",
-      "gravite": "majeur",
+      "titre": "Suggestions de lieu sur le bouton Suivant",
       "statut": "ouvert",
-      "capture": "captures/006.png",
-      "commentaire": "Afficher le menu « Assigner à un technicien » dans une liste lisible, sans recouvrir les autres champs. Il passe sur le passage et les photos, le mot « technicien » reste visible à côté, et « Non assigné » comme « Antoine » sont trop pâles — responsable technique, en mobile et en standard (1024 et 1180)."
+      "capture": "captures/007.png",
+      "versions": "Standard 1024 (technicien), même champ pour tous les rôles",
+      "suggestion": "Afficher les suggestions dans la fenêtre sans couvrir Suivant : par exemple Suivant fixé en bas de la fenêtre, suggestions défilantes au-dessus.",
+      "commentaire": "Standard 1024 (technicien), même champ pour tous les rôles. Afficher les suggestions dans la fenêtre sans couvrir Suivant : par exemple Suivant fixé en bas de la fenêtre, suggestions défilantes au-dessus."
     },
     {
       "id": 7,
-      "titre": "Suggestions de lieu sur le bouton Suivant",
-      "vue": "standard",
-      "gravite": "majeur",
-      "statut": "ouvert",
-      "capture": "captures/007.png",
-      "commentaire": "Garder les suggestions de lieu dans la fenêtre, sans masquer le bouton Suivant. Les pastilles débordent de la carte et recouvrent l’action principale — constaté en standard à 1024 px (rôle technicien), même présentation du champ pour les autres rôles."
-    },
-    {
-      "id": 8,
       "titre": "Priorité sans choix visibles",
-      "vue": "standard",
-      "gravite": "majeur",
       "statut": "ouvert",
       "capture": "captures/008.png",
-      "commentaire": "Montrer les trois priorités (Faible, Normale, Haute) dans un sélecteur. Le bouton n’affiche pas la valeur par défaut (Normale), et un appui fait défiler les niveaux à l’aveugle, en passant d’abord sur Faible — en standard et en mobile, tous les rôles."
+      "versions": "Standard, tous rôles (mobile conservé)",
+      "suggestion": "Garder ce sélecteur en mobile. En standard, afficher la valeur choisie avec une petite flèche signalant d'autres options.",
+      "commentaire": "Standard, tous rôles (mobile conservé). Garder ce sélecteur en mobile. En standard, afficher la valeur choisie avec une petite flèche signalant d'autres options."
     }
   ]
 }
