@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapport du testeur – Labo</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono&display=swap">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#EDEDED;color:#1A1A1A;font:15px/1.4 Geist,system-ui,sans-serif}
+h1{font-size:20px;font-weight:600;margin:0}
+h2{font-size:16px;font-weight:600;margin:0}
+.top{padding:16px 20px 0}
+.wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:16px 20px 24px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:1fr}}
+.half{min-width:0}
+.hrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;min-height:34px}
+.sw{display:inline-flex;background:#fff;border-radius:10px;padding:3px}
+.sw button{border:0;background:none;font:inherit;font-size:14px;font-weight:500;padding:6px 14px;border-radius:8px;color:#6B6B6B;cursor:pointer}
+.sw button[aria-pressed=true]{background:#1A1A1A;color:#fff}
+.stage{position:relative;overflow:hidden}
+.stage iframe{border:0;display:block;transform-origin:0 0;background:#EDEDED}
+.std iframe{border-radius:14px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+.phone{border:10px solid #1A1A1A;border-radius:44px;overflow:hidden;width:410px;height:864px;transform-origin:0 0}
+.phone iframe{width:390px;height:844px}
+.muted{color:#6B6B6B}
+.maj{font-size:13px}
+.cards{display:flex;flex-direction:column;gap:12px}
+.card{background:#fff;border-radius:14px;padding:14px 16px}
+.card h3{font-size:15px;font-weight:600;margin:0 0 8px}
+.ex{font-size:12px;font-weight:500;color:#6B6B6B;margin-bottom:4px}
+.bd{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.b{font-size:12px;font-weight:500;padding:2px 8px;border-radius:999px;background:#F1F1F1}
+.g-bloquant{background:#FBE3E1;color:#9B1C12}.g-majeur{background:#FCEBD5;color:#8A4B00}.g-mineur{background:#EEF0F3;color:#3D4450}
+.s-ouvert{background:#F1F1F1}.s-corrige{background:#E2EEFB;color:#14508C}.s-valide{background:#E1F3E6;color:#1C6B34}
+.card img{display:block;max-width:100%;border-radius:10px;border:1px solid #E4E4E4;cursor:zoom-in;margin-bottom:10px}
+pre{font:12.5px/1.45 'Geist Mono',ui-monospace,monospace;background:#F6F6F6;border-radius:10px;padding:10px 12px;margin:0 0 10px;white-space:pre-wrap;word-break:break-word}
+.cm{margin:0;white-space:pre-wrap}
+.big{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:9;cursor:zoom-out;padding:20px}
+.big img{max-width:100%;max-height:100%;border-radius:10px;background:#fff}
+.wrap.r{grid-template-columns:1fr;max-width:820px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;max-width:860px;margin:0 auto}
+.back{color:#1A1A1A;font-weight:500;font-size:14px;background:#fff;border-radius:10px;padding:7px 14px;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="top"><h1>Rapport du testeur</h1><a class="back" href="./">Retour au test</a></div>
+<div class="wrap r">
+  <section class="half" id="rapport">
+    <div class="hrow"><span class="muted maj" id="maj"></span></div>
+    <div class="cards" id="constats"><p class="muted">Chargement…</p></div>
+  </section>
+</div>
+<script>
+// Partie droite : rapport.json (rempli par l'Agent Testeur).
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const G = { bloquant: 'Bloquant', majeur: 'Majeur', mineur: 'Mineur' }, S = { ouvert: 'Ouvert', corrige: 'Corrigé', valide: 'Validé' }, V = { mobile: 'Mobile', standard: 'Standard' };
+const fmt = d => { const x = new Date(d); return isNaN(x) ? '' : x.toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }); };
+fetch('rapport.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).then(R => {
+  const L = R.constats || [];
+  document.getElementById('maj').textContent = R.maj ? 'Mis à jour le ' + fmt(R.maj) : '';
+  document.getElementById('constats').innerHTML = L.length ? L.map(c => `<article class="card">
+    ${c.exemple ? '<div class="ex">Exemple (à supprimer)</div>' : ''}
+    <h3>${esc(c.id)}. ${esc(c.titre)}</h3>
+    <div class="bd">${c.vue ? `<span class="b">${esc(V[c.vue] || c.vue)}</span>` : ''}${c.gravite ? `<span class="b g-${esc(c.gravite)}">${esc(G[c.gravite] || c.gravite)}</span>` : ''}${c.statut ? `<span class="b s-${esc(c.statut)}">${esc(S[c.statut] || c.statut)}</span>` : ''}</div>
+    ${c.capture ? `<img src="${esc(c.capture)}?t=${Date.now()}" alt="Capture du constat ${esc(c.id)}" loading="lazy">` : ''}
+    ${c.extrait ? `<pre>${esc(c.extrait)}</pre>` : ''}
+    ${c.commentaire ? `<p class="cm">${esc(c.commentaire)}</p>` : ''}
+  </article>`).join('') : '<p class="muted">Aucun constat pour l\'instant.</p>';
+}).catch(() => { document.getElementById('constats').innerHTML = '<p class="muted">Rapport illisible : vérifier que rapport.json est un JSON valide.</p>'; });
+document.getElementById('constats').addEventListener('click', e => { const i = e.target.closest('.card img'); if (!i) return; const o = document.createElement('div'); o.className = 'big'; o.innerHTML = `<img src="${i.src}" alt="">`; o.onclick = () => o.remove(); document.body.append(o); });
+addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelector('.big')?.remove(); });
+</script>
+</body>
+</html>
