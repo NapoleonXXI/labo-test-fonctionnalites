@@ -1,9 +1,9 @@
-import { sb } from '../sb.js?v=1795024736';
-import { state, isManager, role, memberName } from '../state.js?v=1795024736';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795024736';
-import { uploadPhotos, photoTray } from '../photos.js?v=1795024736';
-import { slotTxt, table } from './list.js?v=1795024736';
-import { go } from '../app.js?v=1795024736';
+import { sb } from '../sb.js?v=1795025337';
+import { state, isManager, role, memberName } from '../state.js?v=1795025337';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795025337';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795025337';
+import { slotTxt, table } from './list.js?v=1795025337';
+import { go } from '../app.js?v=1795025337';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
@@ -81,16 +81,25 @@ export async function view(app, { id }) {
         // Lot 9 : un appui ouvre le choix (le bouton affiche Normale, Haute juste au-dessus, Faible juste en dessous, en surimpression) ; choix en un geste : appui puis glisser-relâcher, ou appui puis toucher.
         const mn = document.createElement('div'); mn.className = 'prm'; mn.hidden = true; mn.setAttribute('role', 'menu'); pw.append(mn);
         const RK = ['basse', 'normale', 'haute'], cur = () => ins.find(x => x.checked)?.value || 'normale';
-        const fill = () => { const nm = v => esc(ins.find(x => x.value === v).nextElementSibling.textContent); mn.innerHTML = ['haute', 'normale', 'basse'].map(v => `<button type="button" role="menuitem" class="p-${v}${v === cur() ? ' pcur' : ''}" data-v="${v}">${nm(v)}</button>`).join(''); }; // Lot 10 : Haute / Normale / Faible alignés, la valeur actuelle posée sur le bouton.
-        const out = e => { if (!pw.contains(e.target)) shut(); }, shut = () => { mn.hidden = true; document.removeEventListener('pointerdown', out, true); };
+        const fill = () => { const nm = v => esc(ins.find(x => x.value === v).nextElementSibling.textContent); mn.innerHTML = ['haute', 'normale', 'basse'].map(v => `<button type="button" role="menuitem" class="p-${v}${v === cur() ? ' pcur' : ''}" data-v="${v}"><span>${nm(v)}</span>${v === cur() ? AR : ''}</button>`).join(''); }; // Lot 10 : Haute / Normale / Faible alignés, la valeur actuelle posée sur le bouton.
+        const out = e => { if (!pw.contains(e.target)) shut(); }, shut = () => { mn.hidden = true; btn.style.opacity = ''; document.removeEventListener('pointerdown', out, true); };
         const choose = v => { const x = ins.find(x => x.value === v); if (!x) return; x.checked = true; picked = true; lab(); shut(); x.dispatchEvent(new Event('change', { bubbles: true })); };
-        const place = () => { const bs = mn.querySelectorAll('button'), i = ['haute', 'normale', 'basse'].indexOf(cur()), h = bs[0].offsetHeight, g = 2, pr = pw.getBoundingClientRect(), br = btn.getBoundingClientRect(); let top = br.top + (br.height - h) / 2 - i * (h + g); document.querySelectorAll('.nwbox .head h1, .nwbox .head .fx').forEach(o => { const q = o.getBoundingClientRect(); if (q.left < br.right + 4 && q.right > br.left - 4) top = Math.max(top, q.bottom + 4); }); mn.style.top = Math.round(top - pr.top) + 'px'; }; // Lot 10 : groupe décalé vers le bas s'il toucherait le titre ou la croix.
-        const open = () => { if (!picked) { const nm = ins.find(x => x.value === 'normale'); if (nm) nm.checked = true; picked = true; lab(); nm?.dispatchEvent(new Event('change', { bubbles: true })); } fill(); mn.hidden = false; place(); document.addEventListener('pointerdown', out, true); }; // Haute ne recouvre jamais la croix Fermer.
-        let wasOpen = false, moved = false;
+        const place = () => { /* Lot 11 : Normale exactement à la place du bouton ; Haute et Faible resserrés, ou Haute entièrement au-dessus du bord du bloc ; jamais sur un bord, le titre ni la croix. */
+          const [a, n, f] = mn.querySelectorAll('button'), pr = pw.getBoundingClientRect(), br = btn.getBoundingClientRect(), bx = pw.closest('.nbox')?.getBoundingClientRect(), H = 36, MIN = 20;
+          const hd = [...document.querySelectorAll('.nwbox .head h1, .nwbox .head .fx')].map(o => o.getBoundingClientRect()).filter(q => q.left < br.right + 4 && q.right > br.left - 4);
+          let lim = bx ? bx.top + 3 : -1e9; hd.forEach(q => { lim = Math.max(lim, q.bottom + 3); });
+          let g = 2, h = Math.min(H, Math.floor(br.top - g - lim));
+          let w = br.width; if (h < MIN && bx) { const t = bx.top - 3 - H, hit = hd.filter(q => q.bottom + 3 > t); h = H; g = Math.round(br.top - bx.top + 3); hit.forEach(q => { w = Math.min(w, q.left - 4 - br.left); }); if (w < 52) { w = br.width; h = MIN; g = 2; } }
+          if (bx && br.bottom + g + h > bx.bottom - 3) h = Math.max(MIN, Math.floor(bx.bottom - 3 - g - br.bottom));
+          mn.style.left = Math.round(br.left - pr.left) + 'px'; mn.style.right = 'auto'; mn.style.width = br.width + 'px'; mn.style.gap = g + 'px';
+          [a, f].forEach(x => { x.style.width = Math.floor(w) + 'px'; x.style.height = h + 'px'; x.style.fontSize = h < 30 ? '12px' : ''; }); n.style.height = br.height + 'px'; n.style.borderRadius = getComputedStyle(btn).borderRadius;
+          mn.style.top = Math.round(br.top - pr.top - g - h) + 'px'; };
+        const open = () => { if (!picked) { const nm = ins.find(x => x.value === 'normale'); if (nm) nm.checked = true; picked = true; lab(); nm?.dispatchEvent(new Event('change', { bubbles: true })); } fill(); mn.hidden = false; place(); btn.style.opacity = '0'; document.addEventListener('pointerdown', out, true); }; // Haute ne recouvre jamais la croix Fermer.
+        let wasOpen = false, moved = false, x0 = 0, y0 = 0;
         btn.addEventListener('mousedown', e => e.preventDefault()); mn.addEventListener('mousedown', e => e.preventDefault());
-        btn.addEventListener('pointerdown', e => { e.preventDefault(); wasOpen = !mn.hidden; moved = false; if (!wasOpen) open(); try { btn.releasePointerCapture(e.pointerId); } catch (_) {} });
-        pw.addEventListener('pointermove', () => { moved = true; });
-        pw.addEventListener('pointerup', e => { const t = document.elementFromPoint(e.clientX, e.clientY), o = t?.closest('.prm button'); if (o && mn.contains(o)) { e.preventDefault(); if (!wasOpen && o.dataset.v === cur()) return; return choose(o.dataset.v); } if (t?.closest('.prb') && wasOpen) shut(); });
+        btn.addEventListener('pointerdown', e => { e.preventDefault(); wasOpen = !mn.hidden; moved = false; x0 = e.clientX; y0 = e.clientY; if (!wasOpen) open(); try { btn.releasePointerCapture(e.pointerId); } catch (_) {} });
+        pw.addEventListener('pointermove', e => { if (Math.abs(e.clientX - x0) + Math.abs(e.clientY - y0) > 8) moved = true; });
+        pw.addEventListener('pointerup', e => { const t = document.elementFromPoint(e.clientX, e.clientY), o = t?.closest('.prm button'); if (o && mn.contains(o)) { e.preventDefault(); if (!wasOpen && !moved) return; return choose(o.dataset.v); } if (t?.closest('.prb') && wasOpen) shut(); });
         btn.onclick = e => { e.preventDefault(); if (e.detail === 0) { if (mn.hidden) open(); else shut(); } };
         mn.onclick = e => { const o = e.target.closest('button'); if (o) { e.preventDefault(); choose(o.dataset.v); } }; } } }
     const raw = e => e.innerText.replace(/\u00a0/g, ' ').replace(/\n/g, '');
@@ -309,6 +318,9 @@ export async function view(app, { id }) {
       ab.onclick = e => { e.preventDefault(); if (L.classList.contains('aopen')) return shut(); L.classList.add('aopen'); { const ls = as.querySelectorAll('label'), c0 = as.querySelector('input:checked')?.closest('label') || ls[(ls.length - 1) >> 1]; if (c0) as.scrollTop = c0.offsetTop - 36; wc(); } // Lot 126 : ouverture sur le technicien du milieu. // Lot 125.2 : roue verticale de 3 lignes, celle du milieu centrée sur le bouton.
        document.addEventListener('pointerdown', out, true); }; } } // Lot 122 : un seul bouton « + Assigner à un technicien », qui déplie les choix.
      b3.prepend(L); L.append(...[b3.querySelector('#hp'), b3.querySelector('.aplus'), b3.querySelector('.asgt'), b3.querySelector('.asgb'), b3.querySelector('.assign'), b3.querySelector('.nph')].filter(Boolean)); } }
+  // Lot 11 : Assigner, la zone qui défile ne montre que des noms entiers et avance nom par nom.
+  { const as = $('#f .nb3 .assign'); if (as) { let tm = 0, lastS = 0; const fitAsg = () => { const P = as.parentElement, pc = getComputedStyle(P), av = P.clientWidth - parseFloat(pc.paddingLeft) - parseFloat(pc.paddingRight), ls = [...as.children].filter(x => x.tagName === 'LABEL'); if (!av || !ls.length) return; const g0 = parseFloat(getComputedStyle(as).columnGap) || 0; if (ls.reduce((t, l) => t + l.offsetWidth + g0, -g0) <= av + 1) { as.style.width = ''; lastS = 0; return; } const g = parseFloat(getComputedStyle(as).columnGap) || 0, x0 = ls[0].offsetLeft; const sl = as.scrollLeft, back = sl < lastS - 1; let i = back ? ls.reduce((r, l, k) => l.offsetLeft - x0 <= sl + 2 ? k : r, 0) : ls.findIndex(l => l.offsetLeft - x0 >= sl - 2); if (i < 0) i = ls.length - 1; let w = 0; for (let k = i; k < ls.length; k++) { const nw = w + (w ? g : 0) + ls[k].offsetWidth; if (nw > av && w) break; w = nw; } as.style.width = Math.ceil(w) + 'px'; as.scrollLeft = lastS = ls[i].offsetLeft - x0; };
+    as.addEventListener('scroll', () => { clearTimeout(tm); tm = setTimeout(fitAsg, 140); }, { passive: true }); as.addEventListener('change', () => requestAnimationFrame(fitAsg)); addEventListener('resize', fitAsg); if (window.ResizeObserver) new ResizeObserver(() => requestAnimationFrame(fitAsg)).observe(as.parentElement); } }
   if (DK) { const f = $('#f'), MSG = 'Attention, actualiser la page fera perdre le contenu en cours de création';
     const save = () => { if (window.__giReload || !document.contains(f) || snap0 === null) return; if (snap() !== snap0) sessionStorage.setItem('gi:nwlost', '1'); else sessionStorage.removeItem('gi:nwlost'); };
     let tm; const later = () => { clearTimeout(tm); tm = setTimeout(save, 250); }; f.addEventListener('input', later); f.addEventListener('change', later);

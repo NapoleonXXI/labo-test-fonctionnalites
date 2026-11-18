@@ -1880,3 +1880,9 @@ body:not(.tech) .nform .ac-list li { flex: 0 0 auto; white-space: nowrap; }
 /* Lot 10.3 : photos, défilement photo par photo, aucune photo coupée contre le +. */
 .nform .nb3 > .nb3l > .nph .ptray { box-sizing: content-box; flex: 0 0 auto; scroll-snap-type: x mandatory; scroll-padding-left: 2px; }
 .nform .nb3 > .nb3l > .nph .ptray > .pt { scroll-snap-align: start; }
+/* Lot 11.3 : Assigner, défilement nom par nom (noms entiers). */
+.nform .nb3 > .nb3l > .assign { scroll-snap-type: x mandatory; justify-self: start; }
+.nform .nb3 > .nb3l > .assign > label { scroll-snap-align: start; }
+/* Lot 11.4 : un seul écart entre les blocs et jusqu'aux boutons. */
+.nform .fsum table.list { margin-top: -6px; margin-bottom: -6px; }
+body.tech .nform > .nactions { margin-top: -8px !important; }
