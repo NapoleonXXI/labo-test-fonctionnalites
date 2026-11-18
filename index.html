@@ -3,91 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Labo test fonctionnalités</title>
+<title>Itérations – labo</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap">
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;background:#EDEDED;color:#1A1A1A;font:15px/1.4 Geist,system-ui,sans-serif}
 h1{font-size:20px;font-weight:600;margin:0}
-h2{font-size:16px;font-weight:600;margin:0}
-.top{padding:16px 20px 0}
-.wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:16px 20px 24px;align-items:start}
-@media (max-width:900px){.wrap{grid-template-columns:1fr}}
-.half{min-width:0}
-.hrow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;min-height:34px}
-.sw{display:inline-flex;background:#fff;border-radius:10px;padding:3px}
-.sw button{border:0;background:none;font:inherit;font-size:14px;font-weight:500;padding:6px 14px;border-radius:8px;color:#6B6B6B;cursor:pointer}
-.sw button[aria-pressed=true]{background:#1A1A1A;color:#fff}
-.stage{position:relative;overflow:hidden}
-.stage iframe{border:0;display:block;transform-origin:0 0;background:#EDEDED}
-.std iframe{border-radius:14px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
-.phone{border:10px solid #1A1A1A;border-radius:44px;overflow:hidden;width:410px;height:864px;transform-origin:0 0}
-.phone iframe{width:390px;height:844px}
-.muted{color:#6B6B6B}
-.maj{font-size:13px}
-.rt{width:100%;border-collapse:collapse;font-size:14px}
-.rt th{text-align:left;font-size:12px;font-weight:600;color:#6B6B6B;padding:8px 12px;border-bottom:1px solid #CFCFCF}
-.rt td{vertical-align:top;padding:14px 12px;border-bottom:1px solid #D6D6D6}
-.rt tr:last-child td{border-bottom:0}
-.rt td.tt{width:18%;font-weight:600}.rt td.cp{width:41%}.rt td.cp img,.rt td.sg img{margin-bottom:8px}.vs{display:flex;flex-direction:column;gap:2px;font-size:13.5px}.sg p{margin:0}
-.rt img{display:block;max-width:100%;border-radius:8px;border:1px solid #D6D6D6;cursor:zoom-in}
-.rt b{font-weight:600}
-.vd{font-weight:600}
-.cards{display:flex;flex-direction:column;gap:12px}
-.card{background:#fff;border-radius:14px;padding:14px 16px}
-.card h3{font-size:15px;font-weight:600;margin:0 0 8px}
-.ex{font-size:12px;font-weight:500;color:#6B6B6B;margin-bottom:4px}
-.bd{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
-.b{font-size:12px;font-weight:500;padding:2px 8px;border-radius:999px;background:#F1F1F1}
-.g-bloquant{background:#FBE3E1;color:#9B1C12}.g-majeur{background:#FCEBD5;color:#8A4B00}.g-mineur{background:#EEF0F3;color:#3D4450}
-.s-ouvert{background:#F1F1F1}.s-corrige{background:#E2EEFB;color:#14508C}.s-valide{background:#E1F3E6;color:#1C6B34}
-.card img{display:block;max-width:100%;border-radius:10px;border:1px solid #E4E4E4;cursor:zoom-in;margin-bottom:10px}
-pre{font:12.5px/1.45 'Geist Mono',ui-monospace,monospace;background:#F6F6F6;border-radius:10px;padding:10px 12px;margin:0 0 10px;white-space:pre-wrap;word-break:break-word}
-.cm{margin:0;white-space:pre-wrap}
-.big{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:9;cursor:zoom-out;padding:20px}
-.big img{max-width:100%;max-height:100%;border-radius:10px;background:#fff}
-.wrap.r{grid-template-columns:1fr;max-width:1120px;margin:0 auto}
-.top{display:flex;align-items:center;justify-content:space-between;max-width:1160px;margin:0 auto;padding-top:34px}
-.nav{display:flex;gap:8px}.back{color:#1A1A1A;font-weight:500;font-size:14px;background:#fff;border-radius:10px;padding:7px 14px;text-decoration:none}
 #lotv{position:absolute;top:8px;left:16px;font-size:14px;font-weight:500;color:#6B6B6B}
+.top{display:flex;align-items:center;justify-content:space-between;max-width:1160px;margin:0 auto;padding:34px 20px 0}
+.nav{display:flex;gap:8px}
+.back{color:#1A1A1A;font-weight:500;font-size:14px;background:#fff;border-radius:10px;padding:7px 14px;text-decoration:none}
+main{max-width:1120px;margin:0 auto;padding:4px 20px 40px}
+section{margin-top:24px}
+.vd{font-size:14px;margin:0 0 8px}
+.vd b{font-weight:600}
+.caps{display:flex;flex-wrap:wrap;gap:14px}
+.caps img{display:block;max-width:100%;height:auto}
 </style>
 </head>
 <body>
-<div id="lotv">Lot 3</div>
-<div class="top"><h1>Rapport du testeur</h1><div class="nav"><a class="back" href="test.html">Vue de test</a><a class="back" href="elements.html">Éléments graphiques et textuels</a></div></div>
-<div class="wrap r">
-  <section class="half" id="rapport">
-    <div class="hrow"><span class="muted maj" id="maj"></span></div>
-    <div class="cards" id="constats"><p class="muted">Chargement…</p></div>
-  </section>
-</div>
+<div id="lotv">Lot 4</div>
+<div class="top"><h1>Itérations</h1><div class="nav"><a class="back" href="test.html">Vue de test</a><a class="back" href="elements.html">Éléments graphiques et textuels</a></div></div>
+<main id="it"></main>
 <script>
-// Partie droite : rapport.json (rempli par l'Agent Testeur).
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-const G = { bloquant: 'Bloquant', majeur: 'Majeur', mineur: 'Mineur' }, S = { ouvert: 'Ouvert', corrige: 'Corrigé', valide: 'Validé' }, V = { mobile: 'Mobile', standard: 'Standard' };
-const fmt = d => { const x = new Date(d); return isNaN(x) ? '' : x.toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }); };
-// Versions : [{vue, detail, roles[]}] (recommandé), ou ancien format texte / liste de textes (mots clés mis en gras).
-const KW = /\b(Mobile|Standard|Responsable technique|Resp\.tech|Technicien|Réceptionniste|Directeur|Client|tous (?:les )?rôles)\b/gi;
-const bold = t => esc(t).replace(KW, '<b>$1</b>');
-function vers(c) {
-  let v = c.versions ?? (c.vue ? (V[c.vue] || c.vue) : '');
-  if (!v || (Array.isArray(v) && !v.length)) return '';
-  const lines = [].concat(v).map(x => typeof x === 'string' ? bold(x) : `<b>${esc(x.vue || '')}</b>${x.detail ? ' · ' + esc(x.detail) : ''}${x.roles && [].concat(x.roles).length ? ' — ' + [].concat(x.roles).map(r => `<b>${esc(r)}</b>`).join(', ') : ''}`);
-  return `<div class="vs">${lines.map(l => `<span>${l}</span>`).join('')}</div>`;
-}
-fetch('rapport.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).then(R => {
-  const L = R.constats || [];
-  document.getElementById('maj').innerHTML = (R.verdict ? `<span class="vd">Verdict : ${esc(R.verdict)}</span> · ` : '') + (R.maj ? 'mis à jour le ' + fmt(R.maj) : '');
-  const T = Date.now(), img = (p, alt) => p ? `<img src="${esc(p)}?t=${T}" alt="${esc(alt)}" loading="lazy">` : '';
-  document.getElementById('constats').innerHTML = L.length ? `<table class="rt"><thead><tr><th>Titres</th><th>Capture et versions</th><th>Suggestions</th></tr></thead><tbody>${L.map(c => `<tr>
-    <td class="tt">${esc(c.titre)}</td>
-    <td class="cp">${img(c.capture, c.titre)}${vers(c)}</td>
-    <td class="sg">${img(c.suggestion_capture, 'Suggestion : ' + (c.titre || ''))}<p>${esc(c.suggestion || c.commentaire || '')}</p></td>
-  </tr>`).join('')}</tbody></table>` : '<p class="muted">Aucun constat pour l\'instant.</p>';
-}).catch(() => { document.getElementById('constats').innerHTML = '<p class="muted">Rapport illisible : vérifier que rapport.json est un JSON valide.</p>'; });
-document.getElementById('constats').addEventListener('click', e => { const i = e.target.closest('.rt img, .card img'); if (!i) return; const o = document.createElement('div'); o.className = 'big'; o.innerHTML = `<img src="${i.src}" alt="">`; o.onclick = () => o.remove(); document.body.append(o); });
-addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelector('.big')?.remove(); });
+const T = Date.now();
+fetch('iterations.json?t=' + T, { cache: 'no-store' }).then(r => r.json()).then(d => {
+  document.getElementById('it').innerHTML = (d.iterations || []).map(i => `<section><p class="vd"><b>Version ${esc(i.v)}</b> · ${esc(i.date)}</p><div class="caps">${(i.captures || []).map(c => `<img src="${esc(c)}?t=${T}" alt="Version ${esc(i.v)}" loading="lazy">`).join('')}</div></section>`).join('');
+});
 </script>
 </body>
 </html>

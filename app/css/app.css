@@ -1785,3 +1785,18 @@ body.tech .nform > .ndsc, body.tech .nform > .nb3 { flex: 0 0 100% !important; w
 body.tech .nform.stp3 > .ndsc .cef { min-height: 44px; max-height: 96px; overflow-y: auto; }
 body.tech .nform.stp3 > .ndsc { height: auto !important; max-height: 96px; }
 body.tech .nform.stp3 > .ndsc .fsum2 { height: auto !important; max-height: 92px; }
+/* Lot 4.2 : mobile, actions en bas d'écran (à portée du pouce), 44 px minimum. */
+body.tech .head a.btn.primary[href="#/nouvelle"] { position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 30; min-height: 44px; display: inline-flex; align-items: center; }
+body.tech #app > .page { padding-bottom: 80px; }
+body.tech .nform .nactions { position: sticky; bottom: 0; z-index: 6; background: #FAFAFA; padding: 8px 0 0; }
+body.tech .nform .nactions > * { min-height: 44px; }
+/* Lot 4.3 : aperçu photo entier, sans recadrage (croix inchangée). */
+.ptray .pt img, .nform .nb3 > .nb3l > .nph .pstrip .pt img, .phs img, .cthumb, .photos img, .fiche .ph img, .dtop .ph img { object-fit: contain; background: #F4F4F4; }
+/* Lot 4.5 : menu d'assignation dans le flux (ne recouvre plus les champs), noms plus contrastés. */
+.nform .nb3 > .nb3l.aopen > .assign { position: relative; top: auto; left: auto; }
+.nform .nb3 > .nb3l.aopen > .assign > label { opacity: 1; }
+.nform .nb3 > .nb3l.aopen > .assign > label > span, .nform .nb3 > .nb3l.aopen > .assign > label .cwho { color: #4A4A4A; }
+.nform .nb3 > .nb3l.aopen > .assign > label.wc > span, .nform .nb3 > .nb3l.aopen > .assign > label.wc .cwho { color: var(--ink); }
+/* Lot 4.7 : priorité en standard, valeur + petite flèche. */
+body:not(.tech) .nform .prb.pk { flex-direction: row; gap: 4px; }
+body:not(.tech) .nform .prb .prar { flex: 0 0 auto; }

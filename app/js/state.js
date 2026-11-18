@@ -1,4 +1,4 @@
-import { sb } from './sb.js?v=1795010732';
+import { sb } from './sb.js?v=1795011828';
 
 // État de session partagé entre les vues.
 export const state = {

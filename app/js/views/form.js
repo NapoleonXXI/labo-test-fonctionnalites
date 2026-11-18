@@ -1,9 +1,9 @@
-import { sb } from '../sb.js?v=1795010732';
-import { state, isManager, role, memberName } from '../state.js?v=1795010732';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795010732';
-import { uploadPhotos, photoTray } from '../photos.js?v=1795010732';
-import { slotTxt, table } from './list.js?v=1795010732';
-import { go } from '../app.js?v=1795010732';
+import { sb } from '../sb.js?v=1795011828';
+import { state, isManager, role, memberName } from '../state.js?v=1795011828';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795011828';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795011828';
+import { slotTxt, table } from './list.js?v=1795011828';
+import { go } from '../app.js?v=1795011828';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
@@ -77,7 +77,7 @@ export async function view(app, { id }) {
         const bs = pr.querySelector('input[value=basse] + span'); if (bs) bs.textContent = 'Faible';
         // Lot 117.1 : plus de menu ; chaque appui passe à la priorité suivante (Faible → Normale → Haute → Faible), avec sa couleur.
         let picked = !!id; const btn = pw.querySelector('.prb'), ins = [...pr.querySelectorAll('input')];
-        const lab = () => { const c = ins.find(x => x.checked), v = picked && c ? c.nextElementSibling.textContent : ''; btn.className = 'prb' + (v ? ' pk p-' + c.value : ''); btn.innerHTML = v ? `<small>Priorité</small><span>${v}</span>` : 'Priorité'; }; lab();
+        const lab = () => { const c = ins.find(x => x.checked), v = picked && c ? c.nextElementSibling.textContent : ''; btn.className = 'prb' + (v ? ' pk p-' + c.value : ''); btn.innerHTML = v ? (tech ? `<small>Priorité</small><span>${v}</span>` : `<span>${v}</span><svg class="prar" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4l2.5 2.5L7.5 4"/></svg>`) : 'Priorité'; }; // Lot 4 : en standard, valeur choisie + petite flèche. lab();
         btn.addEventListener('pointerdown', e => e.preventDefault()); btn.addEventListener('mousedown', e => e.preventDefault()); btn.onclick = e => { e.preventDefault(); const y = scrollY; requestAnimationFrame(() => { if (scrollY !== y) scrollTo(0, y); }); const k = ins.findIndex(x => x.checked); (ins[picked ? (k + 1) % ins.length : 0]).checked = true; picked = true; lab(); }; } } }
     const raw = e => e.innerText.replace(/\u00a0/g, ' ').replace(/\n/g, '');
     const fits = x => cx.measureText(x).width <= t1.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
@@ -206,6 +206,8 @@ export async function view(app, { id }) {
     const r = await quitBox(!!dr);
     if (r === 'draft') $('#f').requestSubmit(dr); else if (r === 'quit') leave(false);
   };
+  // Lot 4 : Annuler demande la même confirmation que la croix Fermer, pour tous les profils.
+  { const an = $('#f .nactions a.btn'); if (an && fx) an.onclick = e => { e.preventDefault(); fx.onclick(); }; }
 
   // Lieu : numéros → mobil-homes (« 34 » → 34, 134, 234…) ; texte → lieux prédéfinis. Le texte libre est gardé tel quel.
   const COMMON = ['Réception', 'Camp saisonnier', 'Sanitaire 1', 'Sanitaire 2', 'Scène', 'Restaurant', 'Bar', 'Piscine', 'Aire de jeux', 'Parking', 'Local technique', 'Laverie', 'Épicerie', 'Snack', 'Spa', 'Salle de sport', 'Terrain multisport', 'Mini-golf', 'Accueil', 'Entrée / barrière', 'Lingerie', 'Cuisine du restaurant', 'Salle commune'];
@@ -237,7 +239,7 @@ export async function view(app, { id }) {
     ul.hidden = false; loc.setAttribute('aria-expanded', 'true'); plUl();
   });
   loc.addEventListener('focus', syncTag); loc.addEventListener('blur', syncTag); syncTag();
-  const close = () => { ul.hidden = true; loc.setAttribute('aria-expanded', 'false'); };
+  const close = () => { ul.hidden = true; loc.setAttribute('aria-expanded', 'false'); const n = $('#f .nactions'); if (n) n.style.marginTop = ''; };
   loc.oninput = () => {
     const v = loc.value.trim().toLowerCase();
     if (!v) return close();
@@ -261,7 +263,10 @@ export async function view(app, { id }) {
   let pk = 0; loc.addEventListener('focus', e => { if (Date.now() - pk < 800) { e.stopImmediatePropagation(); loc.blur(); } }, true);
   // Lot 122 : choix au relâchement du doigt, sans clic fantôme ni changement de focus (le clic fantôme d'iOS retombait sur l'élément sous la liste fermée).
   // Lot 124 : liste des lieux en position fixe, hors de la fenêtre : elle ne change plus la hauteur ni le défilement de « Nouvelle intervention » (à-coup vu sur iPad).
-  function plUl() { const r = loc.getBoundingClientRect(); Object.assign(ul.style, { position: 'fixed', left: r.left + 'px', top: (r.bottom + 4) + 'px', right: 'auto', margin: '0', zIndex: '80' }); const q = ul.getBoundingClientRect(), dx = q.left - r.left, dy = q.top - r.bottom - 4; if (dx || dy) { ul.style.left = (r.left - dx) + 'px'; ul.style.top = (r.bottom + 4 - dy) + 'px'; } ul.style.maxHeight = Math.max(120, innerHeight - r.bottom - 16) + 'px'; }
+  // Lot 4 : la liste de lieux ne couvre plus Suivant : les boutons descendent sous la liste (défilante).
+  const na = $('#f .nactions');
+  function plUl() { if (!na) return plUl0(); na.style.marginTop = ''; ul.style.maxHeight = ''; plUl0(); ul.style.maxHeight = Math.min(parseFloat(ul.style.maxHeight) || 999, 132) + 'px'; const need = ul.getBoundingClientRect().bottom + 8 - na.getBoundingClientRect().top; if (need > 0) { na.style.setProperty('margin-top', need + 'px', 'important'); plUl0(); ul.style.maxHeight = Math.min(parseFloat(ul.style.maxHeight) || 999, 132) + 'px'; const k = na.getBoundingClientRect().top - 8 - ul.getBoundingClientRect().top; if (ul.getBoundingClientRect().bottom + 8 > na.getBoundingClientRect().top) ul.style.maxHeight = Math.max(44, k) + 'px'; } }
+  function plUl0() { const r = loc.getBoundingClientRect(); Object.assign(ul.style, { position: 'fixed', left: r.left + 'px', top: (r.bottom + 4) + 'px', right: 'auto', margin: '0', zIndex: '80' }); const q = ul.getBoundingClientRect(), dx = q.left - r.left, dy = q.top - r.bottom - 4; if (dx || dy) { ul.style.left = (r.left - dx) + 'px'; ul.style.top = (r.bottom + 4 - dy) + 'px'; } ul.style.maxHeight = Math.max(120, innerHeight - r.bottom - 16) + 'px'; }
   addEventListener('scroll', () => { if (!ul.hidden) plUl(); }, true); addEventListener('resize', () => { if (!ul.hidden) plUl(); });
   const pickLi = li => { const y = scrollY, w0 = loc.offsetWidth; pk = Date.now(); loc.classList.add('lpick'); setTimeout(() => loc.classList.remove('lpick'), 800); loc.value = li.textContent; close(); loc.blur(); syncTag(); if (scrollY !== y) scrollTo(0, y);
     // Lot 123 : la case s'élargit en douceur et la puce apparaît en fondu (plus d'à-coup de largeur).
@@ -282,8 +287,8 @@ export async function view(app, { id }) {
       ab.insertAdjacentHTML('beforebegin', '<span class="asgt">Intervention assignée à :</span>'); const T0 = ab.textContent, nm = () => { const v = [...as.querySelectorAll('input[name=assign]:checked')].map(i => i.closest('label').querySelector('.cwho').outerHTML); L.classList.toggle('asgd', !!v.length); if (v.length) ab.innerHTML = v.join(' '); else ab.textContent = T0; }; nm(); // Lot 128 : « Intervention assignée à : » + étiquette avec l icône du rôle.
        as.addEventListener('change', () => { nm(); shut(); }); // Lot 124 : le bouton affiche le technicien choisi.
       const wc = () => { const m = as.scrollTop + 54; as.querySelectorAll('label').forEach(l => l.classList.toggle('wc', Math.abs(l.offsetTop + 18 - m) < 18)); }; as.addEventListener('scroll', wc, { passive: true }); // Lot 126 : ligne centrale mise en valeur.
-      ab.onclick = e => { e.preventDefault(); if (L.classList.contains('aopen')) return shut(); as.style.top = (ab.offsetTop + ab.offsetHeight / 2 - 54) + 'px'; as.style.left = ab.offsetLeft + 'px'; L.classList.add('aopen'); { const ls = as.querySelectorAll('label'), c0 = as.querySelector('input:checked')?.closest('label') || ls[(ls.length - 1) >> 1]; if (c0) as.scrollTop = c0.offsetTop - 36; wc(); } // Lot 126 : ouverture sur le technicien du milieu. // Lot 125.2 : roue verticale de 3 lignes, celle du milieu centrée sur le bouton.
-       const rr = as.getBoundingClientRect(); if (rr.right > innerWidth - 8) as.style.left = (ab.offsetLeft - (rr.right - innerWidth + 8)) + 'px'; document.addEventListener('pointerdown', out, true); }; } } // Lot 122 : un seul bouton « + Assigner à un technicien », qui déplie les choix.
+      ab.onclick = e => { e.preventDefault(); if (L.classList.contains('aopen')) return shut(); L.classList.add('aopen'); { const ls = as.querySelectorAll('label'), c0 = as.querySelector('input:checked')?.closest('label') || ls[(ls.length - 1) >> 1]; if (c0) as.scrollTop = c0.offsetTop - 36; wc(); } // Lot 126 : ouverture sur le technicien du milieu. // Lot 125.2 : roue verticale de 3 lignes, celle du milieu centrée sur le bouton.
+       document.addEventListener('pointerdown', out, true); }; } } // Lot 122 : un seul bouton « + Assigner à un technicien », qui déplie les choix.
      b3.prepend(L); L.append(...[b3.querySelector('#hp'), b3.querySelector('.aplus'), b3.querySelector('.asgt'), b3.querySelector('.asgb'), b3.querySelector('.assign'), b3.querySelector('.nph')].filter(Boolean)); } }
   if (DK) { const f = $('#f'), MSG = 'Attention, actualiser la page fera perdre le contenu en cours de création';
     const save = () => { if (window.__giReload || !document.contains(f) || snap0 === null) return; if (snap() !== snap0) sessionStorage.setItem('gi:nwlost', '1'); else sessionStorage.removeItem('gi:nwlost'); };
