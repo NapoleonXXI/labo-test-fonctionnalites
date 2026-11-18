@@ -1,5 +1,7 @@
 // Labo : client Supabase factice, tout reste en mémoire (aucun appel réseau).
-const ME = { id: 'u-julien', email: 'julien@labo.local' };
+const ROLE = ['technicien', 'reception'].includes(new URLSearchParams(location.search).get('r')) ? new URLSearchParams(location.search).get('r') : 'responsable_tech';
+const WHO = { responsable_tech: ['u-julien', 'Julien'], technicien: ['u-thomas', 'Thomas'], reception: ['u-lea', 'Léa'] }[ROLE];
+const ME = { id: WHO[0], email: WHO[1].toLowerCase().replace('é', 'e') + '@labo.local' };
 const ORG = 'org-labo';
 const now = () => new Date().toISOString();
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Math.random().toString(36).slice(2));
@@ -9,12 +11,13 @@ const db = {
     { user_id: 'u-julien', org_id: ORG, role: 'responsable_tech', acting_role: null, full_name: 'Julien', email: 'julien@labo.local', created_at: '2026-01-01T08:00:00Z' },
     { user_id: 'u-thomas', org_id: ORG, role: 'technicien', acting_role: null, full_name: 'Thomas', email: 'thomas@labo.local', created_at: '2026-01-02T08:00:00Z' },
     { user_id: 'u-antoine', org_id: ORG, role: 'technicien', acting_role: null, full_name: 'Antoine', email: 'antoine@labo.local', created_at: '2026-01-03T08:00:00Z' },
+    { user_id: 'u-lea', org_id: ORG, role: 'reception', acting_role: null, full_name: 'Léa', email: 'lea@labo.local', created_at: '2026-01-04T08:00:00Z' },
   ],
   places: [['Accueil', null], ['Aire de jeux', null], ['Piscine', null], ['Sanitaires A', null], ['Restaurant', null], ['MH 01', 1], ['MH 02', 2], ['MH 12', 12]].map(([label, num]) => ({ label, num })),
   interventions: [], intervention_photos: [], intervention_events: [], intervention_reads: [],
 };
 const URLS = {};
-const ev = (id, type, body = '') => db.intervention_events.push({ id: uid(), intervention_id: id, type, body, actor_id: ME.id, actor_name: 'Julien', actor_role: 'responsable_tech', created_at: now() });
+const ev = (id, type, body = '') => db.intervention_events.push({ id: uid(), intervention_id: id, type, body, actor_id: ME.id, actor_name: WHO[1], actor_role: ROLE, created_at: now() });
 
 class Q {
   constructor(t) { this.t = t; this.op = 'select'; this.f = []; this.o = []; this.n = null; this.one = null; this.ret = false; }
@@ -67,7 +70,7 @@ export const sb = {
     const it = db.interventions.find(r => r.id === p.p_id);
     if (fn === 'transition' && it) {
       const s = STEP[p.p_action]; if (s) it.status = s;
-      if (p.p_action === 'prendre') { it.assignee_id = ME.id; it.assignee_role = 'responsable_tech'; }
+      if (p.p_action === 'prendre') { it.assignee_id = ME.id; it.assignee_role = ROLE; }
       if (p.p_action === 'liberer') { it.assignee_id = null; it.assignee_role = null; }
       if (p.p_action === 'resoudre') it.resolved_at = now();
       if (p.p_action === 'publier') ev(it.id, 'publiee');

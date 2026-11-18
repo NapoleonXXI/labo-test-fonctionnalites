@@ -176,7 +176,7 @@ async function load(f, searching) {
     ['brouillon', 'Brouillons', open.filter(r => r.status === 'brouillon')],
     // Lot 60 : les terminées ont leur propre page (restent trouvables par la recherche).
     ...(searching ? [['resolue', 'Terminées', data.filter(r => ['resolue', 'validee'].includes(r.status))]] : []),
-  ].filter(([k, , rows]) => (k !== 'mes' || rows.length) && (k !== 'dem' || dem) && (k !== 'brouillon' || isManager() || role() === 'technicien'));
+  ].filter(([k, , rows]) => (k !== 'mes' || rows.length) && (k !== 'prog' || rows.length) && (k !== 'dem' || dem) && (k !== 'brouillon' || isManager() || role() === 'technicien'));
   // Lot 83 : mobile, l'onglet des programmées tout en bas du feed.
   if (mob) { const i = groups.findIndex(g => g[0] === 'prog'); if (i >= 0) groups.push(...groups.splice(i, 1)); }
   if (DONE) {
