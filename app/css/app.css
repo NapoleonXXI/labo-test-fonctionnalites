@@ -1838,10 +1838,7 @@ html.kbo body.tech .nform .nactions { position: static; }
 .nform .nb3.m3l .asgb { min-height: 0 !important; }
 .nform .nb3.m3l .nb3l > .assign { display: none !important; }
 /* Lot 9.1 : Priorité, Haute juste au-dessus du bouton, Faible juste en dessous, en surimpression (rien ne bouge). */
-.prm { position: absolute !important; left: 0; right: 0; top: -46px; bottom: -46px; display: block; padding: 0; gap: 0; background: none; box-shadow: none; border-radius: 0; pointer-events: none; z-index: 30; }
 .prm[hidden] { display: none; }
-.prm button { position: absolute; left: 0; right: 0; height: 44px; min-height: 0; padding: 0 6px; border-radius: 999px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.16); text-align: center; pointer-events: auto; }
-.prm .pup { top: 0; } .prm .pdn { bottom: 0; }
 .nform .prb, body.tech .nform .prv .prb { display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 4px; }
 .nform .prb .prar { flex: 0 0 auto; }
 /* Lot 9.2 : suggestions de lieu plus discrètes (zone de toucher élargie, invisible). */
@@ -1871,3 +1868,15 @@ html.kbo body.tech .nform .nactions { position: static; }
 .nwbox .head .fx svg { width: 16px; height: 16px; }
 .nwbox .head .fx::before { content: ""; position: absolute; inset: -7px; }
 body.tech .nwbox .page { padding-top: 14px; }
+/* Lot 10.2 : Priorité, Haute / Normale / Faible alignés ; valeur actuelle sur le bouton ; groupe jamais sur le titre ni la croix. */
+.prm { position: absolute !important; left: 0; right: 0; bottom: auto; display: flex; flex-direction: column; gap: 2px; padding: 0; background: none; box-shadow: none; border-radius: 0; z-index: 30; }
+.prm button { height: 44px; min-height: 0; padding: 0 6px; border-radius: 999px; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,.16); text-align: center; }
+.prm button.pcur.p-basse { background: #DCE7FF; } .prm button.pcur.p-normale { background: #FFF1BF; } .prm button.pcur.p-haute { background: #FFE0E0; }
+body.tech .prm button { height: 36px; }
+/* Lot 10.1 : suggestions de lieu (standard) sur une ligne, à droite du champ, sans cadre vide. */
+body:not(.tech) .nform .ac-list { flex-wrap: nowrap; width: max-content; padding: 4px 2px; gap: 4px; border: 0; border-radius: 0; box-shadow: none; background: #fff; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+body:not(.tech) .nform .ac-list::-webkit-scrollbar { display: none; }
+body:not(.tech) .nform .ac-list li { flex: 0 0 auto; white-space: nowrap; }
+/* Lot 10.3 : photos, défilement photo par photo, aucune photo coupée contre le +. */
+.nform .nb3 > .nb3l > .nph .ptray { box-sizing: content-box; flex: 0 0 auto; scroll-snap-type: x mandatory; scroll-padding-left: 2px; }
+.nform .nb3 > .nb3l > .nph .ptray > .pt { scroll-snap-align: start; }

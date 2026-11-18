@@ -1,9 +1,9 @@
-import { sb } from '../sb.js?v=1795024118';
-import { state, isManager, role, memberName } from '../state.js?v=1795024118';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795024118';
-import { uploadPhotos, photoTray } from '../photos.js?v=1795024118';
-import { slotTxt, table } from './list.js?v=1795024118';
-import { go } from '../app.js?v=1795024118';
+import { sb } from '../sb.js?v=1795024736';
+import { state, isManager, role, memberName } from '../state.js?v=1795024736';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795024736';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795024736';
+import { slotTxt, table } from './list.js?v=1795024736';
+import { go } from '../app.js?v=1795024736';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
@@ -81,15 +81,16 @@ export async function view(app, { id }) {
         // Lot 9 : un appui ouvre le choix (le bouton affiche Normale, Haute juste au-dessus, Faible juste en dessous, en surimpression) ; choix en un geste : appui puis glisser-relâcher, ou appui puis toucher.
         const mn = document.createElement('div'); mn.className = 'prm'; mn.hidden = true; mn.setAttribute('role', 'menu'); pw.append(mn);
         const RK = ['basse', 'normale', 'haute'], cur = () => ins.find(x => x.checked)?.value || 'normale';
-        const fill = () => { const c = RK.indexOf(cur()), up = c === 2 ? 'normale' : 'haute', dn = c === 0 ? 'normale' : 'basse', nm = v => esc(ins.find(x => x.value === v).nextElementSibling.textContent); mn.innerHTML = `<button type="button" role="menuitem" class="pup p-${up}" data-v="${up}">${nm(up)}</button><button type="button" role="menuitem" class="pdn p-${dn}" data-v="${dn}">${nm(dn)}</button>`; };
+        const fill = () => { const nm = v => esc(ins.find(x => x.value === v).nextElementSibling.textContent); mn.innerHTML = ['haute', 'normale', 'basse'].map(v => `<button type="button" role="menuitem" class="p-${v}${v === cur() ? ' pcur' : ''}" data-v="${v}">${nm(v)}</button>`).join(''); }; // Lot 10 : Haute / Normale / Faible alignés, la valeur actuelle posée sur le bouton.
         const out = e => { if (!pw.contains(e.target)) shut(); }, shut = () => { mn.hidden = true; document.removeEventListener('pointerdown', out, true); };
         const choose = v => { const x = ins.find(x => x.value === v); if (!x) return; x.checked = true; picked = true; lab(); shut(); x.dispatchEvent(new Event('change', { bubbles: true })); };
-        const open = () => { if (!picked) { const nm = ins.find(x => x.value === 'normale'); if (nm) nm.checked = true; picked = true; lab(); nm?.dispatchEvent(new Event('change', { bubbles: true })); } fill(); mn.hidden = false; { const u = mn.querySelector('.pup'), fx = document.querySelector('.head .fx'); if (u && fx) { const a = u.getBoundingClientRect(), b = fx.getBoundingClientRect(); if (a.right > b.left - 4 && a.left < b.right && a.top < b.bottom && a.bottom > b.top) u.style.transform = `translateX(${Math.round(b.left - 4 - a.right)}px)`; } } document.addEventListener('pointerdown', out, true); }; // Haute ne recouvre jamais la croix Fermer.
+        const place = () => { const bs = mn.querySelectorAll('button'), i = ['haute', 'normale', 'basse'].indexOf(cur()), h = bs[0].offsetHeight, g = 2, pr = pw.getBoundingClientRect(), br = btn.getBoundingClientRect(); let top = br.top + (br.height - h) / 2 - i * (h + g); document.querySelectorAll('.nwbox .head h1, .nwbox .head .fx').forEach(o => { const q = o.getBoundingClientRect(); if (q.left < br.right + 4 && q.right > br.left - 4) top = Math.max(top, q.bottom + 4); }); mn.style.top = Math.round(top - pr.top) + 'px'; }; // Lot 10 : groupe décalé vers le bas s'il toucherait le titre ou la croix.
+        const open = () => { if (!picked) { const nm = ins.find(x => x.value === 'normale'); if (nm) nm.checked = true; picked = true; lab(); nm?.dispatchEvent(new Event('change', { bubbles: true })); } fill(); mn.hidden = false; place(); document.addEventListener('pointerdown', out, true); }; // Haute ne recouvre jamais la croix Fermer.
         let wasOpen = false, moved = false;
         btn.addEventListener('mousedown', e => e.preventDefault()); mn.addEventListener('mousedown', e => e.preventDefault());
         btn.addEventListener('pointerdown', e => { e.preventDefault(); wasOpen = !mn.hidden; moved = false; if (!wasOpen) open(); try { btn.releasePointerCapture(e.pointerId); } catch (_) {} });
         pw.addEventListener('pointermove', () => { moved = true; });
-        pw.addEventListener('pointerup', e => { const t = document.elementFromPoint(e.clientX, e.clientY), o = t?.closest('.prm button'); if (o && mn.contains(o)) { e.preventDefault(); return choose(o.dataset.v); } if (t?.closest('.prb') && wasOpen) shut(); });
+        pw.addEventListener('pointerup', e => { const t = document.elementFromPoint(e.clientX, e.clientY), o = t?.closest('.prm button'); if (o && mn.contains(o)) { e.preventDefault(); if (!wasOpen && o.dataset.v === cur()) return; return choose(o.dataset.v); } if (t?.closest('.prb') && wasOpen) shut(); });
         btn.onclick = e => { e.preventDefault(); if (e.detail === 0) { if (mn.hidden) open(); else shut(); } };
         mn.onclick = e => { const o = e.target.closest('button'); if (o) { e.preventDefault(); choose(o.dataset.v); } }; } } }
     const raw = e => e.innerText.replace(/\u00a0/g, ' ').replace(/\n/g, '');
@@ -206,7 +207,10 @@ export async function view(app, { id }) {
   // Photos choisies : nombre affiché dans la zone d'ajout.
   const ph = $('#f [name=photos]');
   const strip = $('#f .pstrip');
-  const picked = ph ? photoTray(ph, $('#f .ptray'), f => { $('#f .padd').hidden = f.length >= 10; requestAnimationFrame(() => { const t = $('#f .ptray'); t?.scrollTo({ left: t.scrollWidth, behavior: 'smooth' }); strip.scrollTo({ left: strip.scrollWidth, behavior: 'smooth' }); }); }) : [];
+  // Lot 10 : la zone qui défile fait un nombre entier de photos et s'aligne photo par photo : aucune photo coupée contre le +.
+  const fitTray = () => { const t = $('#f .nb3 .nph .ptray'), s2 = t?.parentElement, pa = $('#f .nb3 .nph .padd'); if (!t || !s2) return; t.style.width = ''; const pts = t.querySelectorAll('.pt'); if (!pts.length) return; const tw = pts[0].offsetWidth, g = parseFloat(getComputedStyle(t).columnGap) || 0, sg = parseFloat(getComputedStyle(s2).columnGap) || 0, av = s2.getBoundingClientRect().right - ((pa && !pa.hidden ? pa.getBoundingClientRect().right : s2.getBoundingClientRect().left) + sg) - 12, k = Math.max(1, Math.floor((av + g) / (tw + g))); if (pts.length > k) t.style.width = (k * (tw + g) - g) + 'px'; };
+  addEventListener('resize', () => fitTray());
+  const picked = ph ? photoTray(ph, $('#f .ptray'), f => { $('#f .padd').hidden = f.length >= 10; requestAnimationFrame(() => { fitTray(); const t = $('#f .ptray'); t?.scrollTo({ left: t.scrollWidth, behavior: 'smooth' }); strip.scrollTo({ left: strip.scrollWidth, behavior: 'smooth' }); }); }) : [];
 
   // Lot 87 : croix de fermeture (création). Non vide dès qu'un champ diffère de sa valeur par défaut.
   const snap = () => JSON.stringify(formData($('#f'))) + '|' + picked.length;
@@ -278,7 +282,9 @@ export async function view(app, { id }) {
   // Lot 124 : liste des lieux en position fixe, hors de la fenêtre : elle ne change plus la hauteur ni le défilement de « Nouvelle intervention » (à-coup vu sur iPad).
   // Lot 4 : la liste de lieux ne couvre plus Suivant : les boutons descendent sous la liste (défilante).
   const na = $('#f .nactions');
-  function plUl() { if (!na) return plUl0(); na.style.marginTop = ''; ul.style.maxHeight = ''; plUl0(); ul.style.maxHeight = Math.min(parseFloat(ul.style.maxHeight) || 999, 132) + 'px'; const need = ul.getBoundingClientRect().bottom + 8 - na.getBoundingClientRect().top; if (need > 0) { na.style.setProperty('margin-top', need + 'px', 'important'); plUl0(); ul.style.maxHeight = Math.min(parseFloat(ul.style.maxHeight) || 999, 132) + 'px'; const k = na.getBoundingClientRect().top - 8 - ul.getBoundingClientRect().top; if (ul.getBoundingClientRect().bottom + 8 > na.getBoundingClientRect().top) ul.style.maxHeight = Math.max(44, k) + 'px'; } }
+  // Lot 10 : en standard, suggestions en surimpression à droite du champ Lieu (sur la date), dans le bloc ; rien ne bouge.
+  function plSide() { na && (na.style.marginTop = ''); const r = loc.getBoundingClientRect(), nb = $('#f .nbox')?.getBoundingClientRect() || { right: innerWidth - 8 }, left = r.right + 6; Object.assign(ul.style, { position: 'fixed', left: left + 'px', right: 'auto', margin: '0', zIndex: '80', maxWidth: Math.max(80, nb.right - 8 - left) + 'px', maxHeight: '' }); ul.style.top = Math.round(r.top + (r.height - ul.offsetHeight) / 2) + 'px'; }
+  function plUl() { if (!document.body.classList.contains('tech')) return plSide(); if (!na) return plUl0(); na.style.marginTop = ''; ul.style.maxHeight = ''; plUl0(); ul.style.maxHeight = Math.min(parseFloat(ul.style.maxHeight) || 999, 132) + 'px'; const need = ul.getBoundingClientRect().bottom + 8 - na.getBoundingClientRect().top; if (need > 0) { na.style.setProperty('margin-top', need + 'px', 'important'); plUl0(); ul.style.maxHeight = Math.min(parseFloat(ul.style.maxHeight) || 999, 132) + 'px'; const k = na.getBoundingClientRect().top - 8 - ul.getBoundingClientRect().top; if (ul.getBoundingClientRect().bottom + 8 > na.getBoundingClientRect().top) ul.style.maxHeight = Math.max(44, k) + 'px'; } }
   function plUl0() { const r = loc.getBoundingClientRect(); Object.assign(ul.style, { position: 'fixed', left: r.left + 'px', top: (r.bottom + 4) + 'px', right: 'auto', margin: '0', zIndex: '80' }); const q = ul.getBoundingClientRect(), dx = q.left - r.left, dy = q.top - r.bottom - 4; if (dx || dy) { ul.style.left = (r.left - dx) + 'px'; ul.style.top = (r.bottom + 4 - dy) + 'px'; } ul.style.maxHeight = Math.max(120, innerHeight - r.bottom - 16) + 'px'; }
   addEventListener('scroll', () => { if (!ul.hidden) plUl(); }, true); addEventListener('resize', () => { if (!ul.hidden) plUl(); });
   const pickLi = li => { const y = scrollY, w0 = loc.offsetWidth; pk = Date.now(); loc.classList.add('lpick'); setTimeout(() => loc.classList.remove('lpick'), 800); loc.value = li.textContent; close(); loc.blur(); syncTag(); if (scrollY !== y) scrollTo(0, y);
