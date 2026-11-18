@@ -1,6 +1,6 @@
-import { sb } from './sb.js?v=1795012670';
-import { toast, zoomImg, confirmBox } from './ui.js?v=1795012670';
-import { state } from './state.js?v=1795012670';
+import { sb } from './sb.js?v=1795013328';
+import { toast, zoomImg, confirmBox } from './ui.js?v=1795013328';
+import { state } from './state.js?v=1795013328';
 
 // Envoie des photos dans le bucket privé "photos" : <org_id>/<intervention_id>/<uuid>.<ext>
 // Réduit la photo (2000 px max, JPEG) pour un envoi rapide ; garde l'original si la conversion échoue.
