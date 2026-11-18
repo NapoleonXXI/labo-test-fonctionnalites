@@ -41,7 +41,7 @@ sel.onchange = () => { localStorage.setItem('labo:r', sel.value); show(); };
 function show() {
   document.querySelectorAll('.sw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.m === M));
   stage.className = M === '1' ? 'mob' : 'std';
-  const src = `app/lab.html?m=${M}&r=${sel.value}&v=1795011828`; document.getElementById('full').href = src;
+  const src = `app/lab.html?m=${M}&r=${sel.value}&v=1795012013`; document.getElementById('full').href = src;
   stage.innerHTML = M === '1'
     ? `<div class="phone"><iframe src="${src}" title="Nouvelle intervention, vue mobile"></iframe></div>`
     : `<iframe src="${src}" title="Nouvelle intervention, vue standard"></iframe>`;

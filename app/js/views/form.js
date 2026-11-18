@@ -1,9 +1,9 @@
-import { sb } from '../sb.js?v=1795011828';
-import { state, isManager, role, memberName } from '../state.js?v=1795011828';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795011828';
-import { uploadPhotos, photoTray } from '../photos.js?v=1795011828';
-import { slotTxt, table } from './list.js?v=1795011828';
-import { go } from '../app.js?v=1795011828';
+import { sb } from '../sb.js?v=1795012013';
+import { state, isManager, role, memberName } from '../state.js?v=1795012013';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795012013';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795012013';
+import { slotTxt, table } from './list.js?v=1795012013';
+import { go } from '../app.js?v=1795012013';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
@@ -303,9 +303,10 @@ export async function view(app, { id }) {
     const sum2 = () => { const v = (formData(f).description || '').trim(); f.querySelector('.fsum2')?.remove(); f.classList.remove('ed2', 'hs2'); if (!v) return; f.querySelector('.ndsc')?.insertAdjacentHTML('afterbegin', `<div class="fsum2" role="button" tabindex="0" aria-label="Modifier">${esc(v)}</div>`); f.classList.add('hs2'); };
     f.addEventListener('focusin', e => { if (f.classList.contains('stp3') && e.target.closest('.ndsc .cef')) f.classList.add('ed2'); }); f.addEventListener('click', e => { if (e.target.closest('.fsum2')) { f.classList.add('ed2'); setTimeout(() => f.querySelector('.ndsc .cef')?.focus(), 30); } });
     f.addEventListener('pointerdown', e => { if (f.classList.contains('ed2') && !e.target.closest('.ndsc .cef, .fsum2')) sum2(); }, true);
+    let chk = () => {};
     f.addEventListener('click', e => { if (e.target.closest('.fsum')) { f.classList.add('ed1'); setTimeout(() => f.querySelector('#f [data-name=title]')?.focus(), 30); setTimeout(chk); } });
     f.addEventListener('pointerdown', e => { if (f.classList.contains('ed1') && !e.target.closest('.ndesc0, .ac-list, button[value=publier]') && ok1(formData(f))) { sum1(); setTimeout(chk); } }, true);
-    if (pb) { const chk = () => { const d = formData(f), sl = d.passage === 'slot', a = f.slot_a?.value, b = f.slot_b?.value;
+    if (pb) { chk = () => { const d = formData(f), sl = d.passage === 'slot', a = f.slot_a?.value, b = f.slot_b?.value;
         pb.disabled = (st < 2 || f.classList.contains('ed1')) && !ok1(d) || st > 2 && (!d.passage || (sl && (!f.slot_d?.value || !a || (b && b <= a))));
         const db = f.querySelector('button[value=brouillon]'); if (db) db.disabled = !(d.title || '').trim() && !(d.location || '').trim(); };
       ['input', 'change', 'keyup'].forEach(t => f.addEventListener(t, () => setTimeout(chk), true));
