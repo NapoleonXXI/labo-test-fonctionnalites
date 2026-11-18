@@ -13,7 +13,7 @@ const db = {
     { user_id: 'u-antoine', org_id: ORG, role: 'technicien', acting_role: null, full_name: 'Antoine', email: 'antoine@labo.local', created_at: '2026-01-03T08:00:00Z' },
     { user_id: 'u-lea', org_id: ORG, role: 'reception', acting_role: null, full_name: 'Léa', email: 'lea@labo.local', created_at: '2026-01-04T08:00:00Z' },
   ],
-  places: [['Accueil', null], ['Aire de jeux', null], ['Piscine', null], ['Sanitaires A', null], ['Restaurant', null], ['MH 01', 1], ['MH 02', 2], ['MH 12', 12]].map(([label, num]) => ({ label, num })),
+  places: [['Accueil', null], ['Aire de jeux', null], ['Piscine', null], ['Sanitaires A', null], ['Restaurant', null], ...Array.from({ length: 250 }, (_, i) => [`MH ${String(i + 1).padStart(2, '0')}`, i + 1])].map(([label, num]) => ({ label, num })),
   interventions: [], intervention_photos: [], intervention_events: [], intervention_reads: [],
 };
 const URLS = {};

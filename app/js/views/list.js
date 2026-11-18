@@ -1,8 +1,8 @@
-import { sb } from '../sb.js?v=1795013328';
-import { state, assigneeName, isManager, isRealAdmin, memberName, role, ROLE_NAMES, compactName, roleKind } from '../state.js?v=1795013328';
-import { $, $$, esc, errMsg, statusPill, fmtCreated, fmtAgo, fmtDate, fmtDateTime, PRIORITY, WRENCH, BRIEFCASE, STATUS, ROLES, CLOCK, confirmBox, toast, n2, stackSticky, ACTMSG } from '../ui.js?v=1795013328';
-import { go, render } from '../app.js?v=1795013328';
-import * as form from './form.js?v=1795013328';
+import { sb } from '../sb.js?v=1795021841';
+import { state, assigneeName, isManager, isRealAdmin, memberName, role, ROLE_NAMES, compactName, roleKind } from '../state.js?v=1795021841';
+import { $, $$, esc, errMsg, statusPill, fmtCreated, fmtAgo, fmtDate, fmtDateTime, PRIORITY, WRENCH, BRIEFCASE, STATUS, ROLES, CLOCK, confirmBox, toast, n2, stackSticky, ACTMSG } from '../ui.js?v=1795021841';
+import { go, render } from '../app.js?v=1795021841';
+import * as form from './form.js?v=1795021841';
 
 // Liste unique (lot 13) : mes interventions, signalées, prises par les autres, brouillons, puis terminées repliées.
 const STATUSES = ['publiee', 'prise_en_charge', 'resolue', 'validee'];
@@ -239,7 +239,7 @@ async function load(f, searching) {
   // Lot 61 : vue standard, le détail se déplie sous sa carte (même largeur) au lieu d'ouvrir une page.
   const inl = !searching && !document.body.classList.contains('tech') && innerWidth > 600 && role() !== 'client';
   // Lot 71 : module du détail préchargé, données lancées dès l'appui (pointerdown).
-  const dmod = import('./detail.js?v=1795013328');
+  const dmod = import('./detail.js?v=1795021841');
   $$('#rows tr[data-id]').forEach(tr => tr.addEventListener('pointerdown', () => { if (!tr.classList.contains('xopen')) dmod.then(m => m.prefetch(tr.dataset.id)); }));
   { const ids = $$('#rows tr[data-id]').map(t => t.dataset.id); setTimeout(() => dmod.then(m => m.warm(ids)), 300); }
   qaInit();
@@ -463,7 +463,7 @@ const qRun = async (id, a, quiet) => {
   const { error } = a === 'demander' ? await sb.rpc('request_transfer', { p_id: id }) : await sb.rpc('transition', { p_id: id, p_action: a, p_comment: '' });
   if (error) return toast(errMsg(error), true);
   // Lot 111 : « Intervention terminée » animée aussi depuis les étiquettes de la carte.
-  if (a === 'resoudre') return (await import('./detail.js?v=1795013328')).doneScreen('Intervention terminée', render);
+  if (a === 'resoudre') return (await import('./detail.js?v=1795021841')).doneScreen('Intervention terminée', render);
   if (!quiet && a !== 'prendre') toast(ACTMSG(a)); render(); // Lot 116 : prise par appui long sans message.
 };
 function qaInit() { // Lot 132 : appui long sur toute la carte (vue mobile, réelle et simulée).
@@ -539,7 +539,7 @@ document.addEventListener('click', e => { const a = e.target.closest?.('a[href="
 async function newWin(app) {
   const c = document.createElement('div'); c.className = 'qcatch qgrey nwin';
   const w = document.createElement('div'); w.className = 'nwbox'; c.append(w); app.append(c);
-  const close = () => { c.remove(); sessionStorage.removeItem('gi:nwlost'); document.documentElement.classList.remove('nwlock'); removeEventListener('hashchange', close); };
+  const close = () => { c.remove(); sessionStorage.removeItem('gi:nwlost'); document.documentElement.classList.remove('nwlock', 'kbo'); removeEventListener('hashchange', close); };
   // Lot 125.1 : arrière-plan verrouillé tant que la fenêtre est ouverte (plus de défilement ni de glissement latéral de la page sur iPhone/iPad).
   document.documentElement.classList.add('nwlock');
   c.addEventListener('touchmove', e => { for (let el = e.target; el && el !== c; el = el.parentElement) { const cs = getComputedStyle(el), o = cs.overflowY, ox = cs.overflowX; if ((o === 'auto' || o === 'scroll') && el.scrollHeight > el.clientHeight + 1) return; if ((ox === 'auto' || ox === 'scroll') && el.scrollWidth > el.clientWidth + 1) return; } e.preventDefault(); }, { passive: false });
@@ -552,6 +552,10 @@ async function newWin(app) {
   // Lot 125 : fenêtre ancrée par le haut (position figée à l'ouverture) : un changement de hauteur du contenu ne la fait plus sauter.
   const cs = getComputedStyle(c), pt = parseFloat(cs.paddingTop), pb = parseFloat(cs.paddingBottom), mt = document.body.classList.contains('tech') ? 0 : Math.max(0, (c.clientHeight - pt - pb - w.offsetHeight) / 2); /* Lot 134 : en mobile, ancrée en haut pour garder toute la hauteur */
   c.style.alignItems = document.body.classList.contains('tech') ? 'flex-end' : 'flex-start'; /* Lot 4 : en mobile, fenêtre en bas d'écran (actions à portée du pouce) */ w.style.marginTop = mt + 'px'; w.style.maxHeight = (c.clientHeight - pt - pb - mt) + 'px';
+  // Lot 7 : clavier ouvert (iPad/iPhone) : la fenêtre suit la partie visible de l'écran (visualViewport) et reste défilable, sans contenu masqué.
+  const vv = window.visualViewport, frame = document.body.classList.contains('tech') && matchMedia('(min-width: 601px)').matches;
+  if (vv && !frame) { const H0 = c.clientHeight, vfit = () => { if (!c.isConnected) { vv.removeEventListener('resize', vfit); vv.removeEventListener('scroll', vfit); return; } const kb = vv.height < H0 - 80; document.documentElement.classList.toggle('kbo', kb); if (!kb) { c.style.top = c.style.height = c.style.bottom = ''; w.style.marginTop = mt + 'px'; w.style.maxHeight = (H0 - pt - pb - mt) + 'px'; return; } c.style.top = vv.offsetTop + 'px'; c.style.bottom = 'auto'; c.style.height = vv.height + 'px'; w.style.marginTop = '0px'; w.style.maxHeight = Math.max(120, vv.height - pt - pb) + 'px'; };
+    vv.addEventListener('resize', vfit); vv.addEventListener('scroll', vfit); }
   requestAnimationFrame(() => c.classList.add('in'));
 }
 
