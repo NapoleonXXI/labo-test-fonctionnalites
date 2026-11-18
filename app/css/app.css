@@ -1835,12 +1835,11 @@ body:not(.tech) .nform .nb3 > .nb3l > .nph .ptray:has(> :nth-child(3)) ~ .pslots
 .nform .nf.ac .cef[data-name=location]:not(.tagged) { padding-top: 11px; padding-bottom: 10px; }
 .mbtns > button, .mbtns > .btn { min-height: 44px; }
 body:not(.tech) .head a.btn.primary[href="#/nouvelle"] { min-height: 44px; display: inline-flex; align-items: center; }
-/* Lot 7 : menu Priorité dans le flux, sous le bouton (ne couvre plus Suivant). */
-.prm { position: static !important; margin-top: 4px; }
 /* Lot 7 : clavier ouvert, plus de pied collant (bande opaque) en mobile. */
 html.kbo body.tech .nform .nactions { position: static; }
 /* Lot 7 : mesure de la hauteur de Description sans les agrandissements des lots 4 à 6. */
 .nform .nb3.m3l .asgb { min-height: 0 !important; }
 .nform .nb3.m3l .nb3l > .assign { display: none !important; }
-body:not(.tech) .nform .prw:has(> .prm:not([hidden])) { display: flex; flex-direction: column; align-items: flex-start; align-self: flex-start !important; }
-body:not(.tech) .nform .prw:has(> .prm:not([hidden])) > .prb { flex: none; }
+/* Lot 8 : menu Priorité en ligne, à droite du bouton, dans l'espace libre du bloc (aucun déplacement, Suivant non couvert). */
+.prm { position: absolute !important; left: calc(100% + 6px); top: 0; flex-direction: row; gap: 0; padding: 0; height: 44px; align-items: center; }
+.prm button { padding: 0 8px; }

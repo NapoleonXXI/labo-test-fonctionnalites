@@ -1,9 +1,9 @@
-import { sb } from '../sb.js?v=1795021841';
-import { state, isManager, role, memberName } from '../state.js?v=1795021841';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795021841';
-import { uploadPhotos, photoTray } from '../photos.js?v=1795021841';
-import { slotTxt, table } from './list.js?v=1795021841';
-import { go } from '../app.js?v=1795021841';
+import { sb } from '../sb.js?v=1795022152';
+import { state, isManager, role, memberName } from '../state.js?v=1795022152';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795022152';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795022152';
+import { slotTxt, table } from './list.js?v=1795022152';
+import { go } from '../app.js?v=1795022152';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
