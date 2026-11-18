@@ -1,0 +1,16 @@
+{
+  "maj": "2026-11-18T13:40:00+01:00",
+  "constats": [
+    {
+      "id": 1,
+      "exemple": true,
+      "titre": "EXEMPLE – Bouton « Créer et publier » trop petit pour le pouce",
+      "vue": "mobile",
+      "gravite": "mineur",
+      "statut": "ouvert",
+      "capture": "captures/001.png",
+      "extrait": ".nactions .primary { height: 36px; }",
+      "commentaire": "Ceci est un exemple de format, à supprimer au premier vrai constat. En vue mobile, la zone tactile du bouton fait 36 px de haut, sous les 44 px recommandés."
+    }
+  ]
+}
