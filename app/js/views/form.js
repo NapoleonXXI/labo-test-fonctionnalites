@@ -1,9 +1,9 @@
-import { sb } from '../sb.js?v=1795025337';
-import { state, isManager, role, memberName } from '../state.js?v=1795025337';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795025337';
-import { uploadPhotos, photoTray } from '../photos.js?v=1795025337';
-import { slotTxt, table } from './list.js?v=1795025337';
-import { go } from '../app.js?v=1795025337';
+import { sb } from '../sb.js?v=1795025589';
+import { state, isManager, role, memberName } from '../state.js?v=1795025589';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795025589';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795025589';
+import { slotTxt, table } from './list.js?v=1795025589';
+import { go } from '../app.js?v=1795025589';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
@@ -84,15 +84,10 @@ export async function view(app, { id }) {
         const fill = () => { const nm = v => esc(ins.find(x => x.value === v).nextElementSibling.textContent); mn.innerHTML = ['haute', 'normale', 'basse'].map(v => `<button type="button" role="menuitem" class="p-${v}${v === cur() ? ' pcur' : ''}" data-v="${v}"><span>${nm(v)}</span>${v === cur() ? AR : ''}</button>`).join(''); }; // Lot 10 : Haute / Normale / Faible alignés, la valeur actuelle posée sur le bouton.
         const out = e => { if (!pw.contains(e.target)) shut(); }, shut = () => { mn.hidden = true; btn.style.opacity = ''; document.removeEventListener('pointerdown', out, true); };
         const choose = v => { const x = ins.find(x => x.value === v); if (!x) return; x.checked = true; picked = true; lab(); shut(); x.dispatchEvent(new Event('change', { bubbles: true })); };
-        const place = () => { /* Lot 11 : Normale exactement à la place du bouton ; Haute et Faible resserrés, ou Haute entièrement au-dessus du bord du bloc ; jamais sur un bord, le titre ni la croix. */
-          const [a, n, f] = mn.querySelectorAll('button'), pr = pw.getBoundingClientRect(), br = btn.getBoundingClientRect(), bx = pw.closest('.nbox')?.getBoundingClientRect(), H = 36, MIN = 20;
-          const hd = [...document.querySelectorAll('.nwbox .head h1, .nwbox .head .fx')].map(o => o.getBoundingClientRect()).filter(q => q.left < br.right + 4 && q.right > br.left - 4);
-          let lim = bx ? bx.top + 3 : -1e9; hd.forEach(q => { lim = Math.max(lim, q.bottom + 3); });
-          let g = 2, h = Math.min(H, Math.floor(br.top - g - lim));
-          let w = br.width; if (h < MIN && bx) { const t = bx.top - 3 - H, hit = hd.filter(q => q.bottom + 3 > t); h = H; g = Math.round(br.top - bx.top + 3); hit.forEach(q => { w = Math.min(w, q.left - 4 - br.left); }); if (w < 52) { w = br.width; h = MIN; g = 2; } }
-          if (bx && br.bottom + g + h > bx.bottom - 3) h = Math.max(MIN, Math.floor(bx.bottom - 3 - g - br.bottom));
+        const place = () => { /* Lot 12 : groupe compact (écart 2 px), trois pastilles de la taille du bouton ; Normale exactement à la place du bouton ; menu flottant au-dessus de tout (croix comprise). */
+          const [a, n, f] = mn.querySelectorAll('button'), pr = pw.getBoundingClientRect(), br = btn.getBoundingClientRect(), g = 2, h = br.height, rad = getComputedStyle(btn).borderRadius;
           mn.style.left = Math.round(br.left - pr.left) + 'px'; mn.style.right = 'auto'; mn.style.width = br.width + 'px'; mn.style.gap = g + 'px';
-          [a, f].forEach(x => { x.style.width = Math.floor(w) + 'px'; x.style.height = h + 'px'; x.style.fontSize = h < 30 ? '12px' : ''; }); n.style.height = br.height + 'px'; n.style.borderRadius = getComputedStyle(btn).borderRadius;
+          [a, n, f].forEach(x => { x.style.width = br.width + 'px'; x.style.height = h + 'px'; x.style.fontSize = ''; x.style.borderRadius = rad; });
           mn.style.top = Math.round(br.top - pr.top - g - h) + 'px'; };
         const open = () => { if (!picked) { const nm = ins.find(x => x.value === 'normale'); if (nm) nm.checked = true; picked = true; lab(); nm?.dispatchEvent(new Event('change', { bubbles: true })); } fill(); mn.hidden = false; place(); btn.style.opacity = '0'; document.addEventListener('pointerdown', out, true); }; // Haute ne recouvre jamais la croix Fermer.
         let wasOpen = false, moved = false, x0 = 0, y0 = 0;
