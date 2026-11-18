@@ -1,16 +1,74 @@
 {
-  "maj": "2026-11-18T13:40:00+01:00",
+  "maj": "2026-11-18T14:22:30+01:00",
   "constats": [
     {
       "id": 1,
-      "exemple": true,
-      "titre": "EXEMPLE – Bouton « Créer et publier » trop petit pour le pouce",
-      "vue": "mobile",
-      "gravite": "mineur",
+      "titre": "Non validée",
       "statut": "ouvert",
-      "capture": "captures/001.png",
-      "extrait": ".nactions .primary { height: 36px; }",
-      "commentaire": "Ceci est un exemple de format, à supprimer au premier vrai constat. En vue mobile, la zone tactile du bouton fait 36 px de haut, sous les 44 px recommandés."
+      "commentaire": "Non validée : date affichée à côté du lieu, actions hors de portée du pouce en mobile, aperçu photo coupé, Annuler sans confirmation, menu d’assignation illisible et priorité sans choix visibles."
+    },
+    {
+      "id": 2,
+      "titre": "Date affichée à côté du lieu",
+      "vue": "standard",
+      "gravite": "majeur",
+      "statut": "ouvert",
+      "capture": "captures/002.png",
+      "commentaire": "Retirer la date et l’heure placées à côté du champ Lieu. Elles n’ont pas été demandées et passent pour une valeur déjà saisie, sur les trois rôles, en standard (1024 et 1180) comme en mobile."
+    },
+    {
+      "id": 3,
+      "titre": "Actions hors de portée du pouce",
+      "vue": "mobile",
+      "gravite": "majeur",
+      "statut": "ouvert",
+      "capture": "captures/003.png",
+      "commentaire": "Placer les actions principales en bas de l’écran, à portée du pouce, et porter le bouton d’accueil à 44 px de haut. En mobile (390), « Nouvelle intervention » est tout en haut et ne fait que 32 px, et Suivant / Créer et publier restent dans le tiers supérieur, le bas de l’écran restant vide."
+    },
+    {
+      "id": 4,
+      "titre": "Aperçu photo coupé",
+      "vue": "standard",
+      "gravite": "majeur",
+      "statut": "ouvert",
+      "capture": "captures/004.png",
+      "commentaire": "Afficher l’aperçu de la photo en entier, sans la rogner, et agrandir la croix de suppression (22 px). La vignette carrée coupe les bords d’une photo 800×500 ; même défaut en mobile et en standard, pour les trois rôles."
+    },
+    {
+      "id": 5,
+      "titre": "Annuler ferme sans confirmation",
+      "vue": "mobile",
+      "gravite": "majeur",
+      "statut": "ouvert",
+      "capture": "captures/005.png",
+      "commentaire": "Faire confirmer aussi le bouton Annuler dès qu’il y a une saisie. Chez la réceptionniste, Annuler ferme tout de suite et perd le contenu, alors que le bouton Fermer demande confirmation — en mobile (390) et en standard (1024 et 1180)."
+    },
+    {
+      "id": 6,
+      "titre": "Menu d’assignation illisible",
+      "vue": "mobile",
+      "gravite": "majeur",
+      "statut": "ouvert",
+      "capture": "captures/006.png",
+      "commentaire": "Afficher le menu « Assigner à un technicien » dans une liste lisible, sans recouvrir les autres champs. Il passe sur le passage et les photos, le mot « technicien » reste visible à côté, et « Non assigné » comme « Antoine » sont trop pâles — responsable technique, en mobile et en standard (1024 et 1180)."
+    },
+    {
+      "id": 7,
+      "titre": "Suggestions de lieu sur le bouton Suivant",
+      "vue": "standard",
+      "gravite": "majeur",
+      "statut": "ouvert",
+      "capture": "captures/007.png",
+      "commentaire": "Garder les suggestions de lieu dans la fenêtre, sans masquer le bouton Suivant. Les pastilles débordent de la carte et recouvrent l’action principale — constaté en standard à 1024 px (rôle technicien), même présentation du champ pour les autres rôles."
+    },
+    {
+      "id": 8,
+      "titre": "Priorité sans choix visibles",
+      "vue": "standard",
+      "gravite": "majeur",
+      "statut": "ouvert",
+      "capture": "captures/008.png",
+      "commentaire": "Montrer les trois priorités (Faible, Normale, Haute) dans un sélecteur. Le bouton n’affiche pas la valeur par défaut (Normale), et un appui fait défiler les niveaux à l’aveugle, en passant d’abord sur Faible — en standard et en mobile, tous les rôles."
     }
   ]
 }
