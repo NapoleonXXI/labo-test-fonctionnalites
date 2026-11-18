@@ -1,9 +1,9 @@
-import { sb } from '../sb.js';
-import { state, isManager, role, memberName } from '../state.js';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js';
-import { uploadPhotos, photoTray } from '../photos.js';
-import { slotTxt, table } from './list.js';
-import { go } from '../app.js';
+import { sb } from '../sb.js?v=1795007280';
+import { state, isManager, role, memberName } from '../state.js?v=1795007280';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795007280';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795007280';
+import { slotTxt, table } from './list.js?v=1795007280';
+import { go } from '../app.js?v=1795007280';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
