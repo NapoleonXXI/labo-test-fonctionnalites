@@ -1,5 +1,5 @@
 {
-  "maj": "2026-11-18T14:22:30+01:00",
+  "maj": "2026-11-18T14:35:00+01:00",
   "constats": [
     {
       "id": 1,
@@ -9,12 +9,12 @@
     },
     {
       "id": 2,
-      "titre": "Date affichée à côté du lieu",
+      "titre": "Date à déplacer hors du champ Lieu",
       "vue": "standard",
       "gravite": "majeur",
       "statut": "ouvert",
       "capture": "captures/002.png",
-      "commentaire": "Retirer la date et l’heure placées à côté du champ Lieu. Elles n’ont pas été demandées et passent pour une valeur déjà saisie, sur les trois rôles, en standard (1024 et 1180) comme en mobile."
+      "commentaire": "**Déplacer la date et l'heure**, demandées par Napoléon, hors du champ Lieu : à cet endroit, elles passent pour une valeur déjà saisie. Constaté pour les trois rôles, en standard (1024 et 1180) comme en mobile."
     },
     {
       "id": 3,
