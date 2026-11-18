@@ -26,14 +26,6 @@ h2{font-size:16px;font-weight:600;margin:0}
 .phone iframe{width:390px;height:844px}
 .muted{color:#6B6B6B}
 .maj{font-size:13px}
-.rt{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:14px;overflow:hidden;font-size:14px}
-.rt th{text-align:left;font-size:12px;font-weight:600;color:#6B6B6B;padding:10px 12px;border-bottom:1px solid #EDEDED}
-.rt td{vertical-align:top;padding:12px;border-bottom:1px solid #EDEDED}
-.rt tr:last-child td{border-bottom:0}
-.rt td:first-child{width:42%}
-.rt img{display:block;max-width:100%;border-radius:8px;border:1px solid #E4E4E4;cursor:zoom-in}
-.rt b{font-weight:600}
-.vd{font-weight:600}
 .cards{display:flex;flex-direction:column;gap:12px}
 .card{background:#fff;border-radius:14px;padding:14px 16px}
 .card h3{font-size:15px;font-weight:600;margin:0 0 8px}
@@ -69,14 +61,17 @@ const G = { bloquant: 'Bloquant', majeur: 'Majeur', mineur: 'Mineur' }, S = { ou
 const fmt = d => { const x = new Date(d); return isNaN(x) ? '' : x.toLocaleString('fr-FR', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' }); };
 fetch('rapport.json?t=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).then(R => {
   const L = R.constats || [];
-  document.getElementById('maj').innerHTML = (R.verdict ? `<span class="vd">Verdict : ${esc(R.verdict)}</span> · ` : '') + (R.maj ? 'mis à jour le ' + fmt(R.maj) : '');
-  document.getElementById('constats').innerHTML = L.length ? `<table class="rt"><thead><tr><th>Capture</th><th>Version</th><th>Suggestion</th></tr></thead><tbody>${L.map(c => `<tr>
-    <td>${c.capture ? `<img src="${esc(c.capture)}?t=${Date.now()}" alt="${esc(c.titre)}" loading="lazy">` : ''}<div style="margin-top:6px"><b>${esc(c.titre)}</b></div></td>
-    <td>${esc(c.versions || c.vue || '')}</td>
-    <td>${esc(c.suggestion || c.commentaire || '')}</td>
-  </tr>`).join('')}</tbody></table>` : '<p class="muted">Aucun constat pour l\'instant.</p>';
+  document.getElementById('maj').textContent = R.maj ? 'Mis à jour le ' + fmt(R.maj) : '';
+  document.getElementById('constats').innerHTML = L.length ? L.map(c => `<article class="card">
+    ${c.exemple ? '<div class="ex">Exemple (à supprimer)</div>' : ''}
+    <h3>${esc(c.id)}. ${esc(c.titre)}</h3>
+    <div class="bd">${c.vue ? `<span class="b">${esc(V[c.vue] || c.vue)}</span>` : ''}${c.gravite ? `<span class="b g-${esc(c.gravite)}">${esc(G[c.gravite] || c.gravite)}</span>` : ''}${c.statut ? `<span class="b s-${esc(c.statut)}">${esc(S[c.statut] || c.statut)}</span>` : ''}</div>
+    ${c.capture ? `<img src="${esc(c.capture)}?t=${Date.now()}" alt="Capture du constat ${esc(c.id)}" loading="lazy">` : ''}
+    ${c.extrait ? `<pre>${esc(c.extrait)}</pre>` : ''}
+    ${c.commentaire ? `<p class="cm">${esc(c.commentaire)}</p>` : ''}
+  </article>`).join('') : '<p class="muted">Aucun constat pour l\'instant.</p>';
 }).catch(() => { document.getElementById('constats').innerHTML = '<p class="muted">Rapport illisible : vérifier que rapport.json est un JSON valide.</p>'; });
-document.getElementById('constats').addEventListener('click', e => { const i = e.target.closest('.rt img, .card img'); if (!i) return; const o = document.createElement('div'); o.className = 'big'; o.innerHTML = `<img src="${i.src}" alt="">`; o.onclick = () => o.remove(); document.body.append(o); });
+document.getElementById('constats').addEventListener('click', e => { const i = e.target.closest('.card img'); if (!i) return; const o = document.createElement('div'); o.className = 'big'; o.innerHTML = `<img src="${i.src}" alt="">`; o.onclick = () => o.remove(); document.body.append(o); });
 addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelector('.big')?.remove(); });
 </script>
 </body>
