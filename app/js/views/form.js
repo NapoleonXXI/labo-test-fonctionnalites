@@ -1,9 +1,9 @@
-import { sb } from '../sb.js?v=1795022152';
-import { state, isManager, role, memberName } from '../state.js?v=1795022152';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795022152';
-import { uploadPhotos, photoTray } from '../photos.js?v=1795022152';
-import { slotTxt, table } from './list.js?v=1795022152';
-import { go } from '../app.js?v=1795022152';
+import { sb } from '../sb.js?v=1795024118';
+import { state, isManager, role, memberName } from '../state.js?v=1795024118';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795024118';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795024118';
+import { slotTxt, table } from './list.js?v=1795024118';
+import { go } from '../app.js?v=1795024118';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
@@ -77,12 +77,21 @@ export async function view(app, { id }) {
         const bs = pr.querySelector('input[value=basse] + span'); if (bs) bs.textContent = 'Faible';
         // Lot 117.1 : plus de menu ; chaque appui passe à la priorité suivante (Faible → Normale → Haute → Faible), avec sa couleur.
         const AR = '<svg class="prar" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4l2.5 2.5L7.5 4"/></svg>'; let picked = !!id; const btn = pw.querySelector('.prb'), ins = [...pr.querySelectorAll('input')];
-        const lab = () => { const c = ins.find(x => x.checked), v = picked && c ? c.nextElementSibling.textContent : ''; btn.className = 'prb' + (v ? ' pk p-' + c.value : ''); btn.innerHTML = v ? (tech ? `<small>Priorité</small><span>${v}</span>` : `<span>${v}</span>${AR}`) : (tech ? 'Priorité' : `<span>Priorité</span>${AR}`); }; lab(); /* Lot 5 : en standard, flèche dès le départ. */
-        btn.addEventListener('pointerdown', e => e.preventDefault()); btn.addEventListener('mousedown', e => e.preventDefault()); if (!tech) { const mn = document.createElement('div'); mn.className = 'prm'; mn.hidden = true; mn.setAttribute('role', 'menu'); mn.innerHTML = ins.map(x => `<button type="button" role="menuitem" class="p-${x.value}" data-v="${x.value}">${esc(x.nextElementSibling.textContent)}</button>`).join(''); pw.append(mn); // Lot 7 : menu dans le flux (ne couvre plus Suivant). Lot 5 : en standard, petit menu Faible / Normale / Haute sous le bouton.
-          const shut = () => { mn.hidden = true; document.removeEventListener('pointerdown', out, true); }, out = e => { if (!pw.contains(e.target) && !mn.contains(e.target)) shut(); };
-          mn.addEventListener('mousedown', e => e.preventDefault()); mn.onclick = e => { const b = e.target.closest('button'); if (!b) return; e.preventDefault(); const x = ins.find(x => x.value === b.dataset.v); x.checked = true; picked = true; lab(); shut(); x.dispatchEvent(new Event('change', { bubbles: true })); };
-                    btn.onclick = e => { e.preventDefault(); if (!mn.hidden) return shut(); mn.hidden = false; document.addEventListener('pointerdown', out, true); }; }
-        else btn.onclick = e => { e.preventDefault(); const y = scrollY; requestAnimationFrame(() => { if (scrollY !== y) scrollTo(0, y); }); const k = ins.findIndex(x => x.checked); (ins[picked ? (k + 1) % ins.length : 0]).checked = true; picked = true; lab(); }; } } }
+        const lab = () => { const c = ins.find(x => x.checked), v = picked && c ? c.nextElementSibling.textContent : ''; btn.className = 'prb' + (v ? ' pk p-' + c.value : ''); btn.innerHTML = v ? `<span>${v}</span>${AR}` : `<span>Priorité</span>${AR}`; }; lab(); /* Lot 9 : même bouton (valeur + flèche) en standard et en mobile. */
+        // Lot 9 : un appui ouvre le choix (le bouton affiche Normale, Haute juste au-dessus, Faible juste en dessous, en surimpression) ; choix en un geste : appui puis glisser-relâcher, ou appui puis toucher.
+        const mn = document.createElement('div'); mn.className = 'prm'; mn.hidden = true; mn.setAttribute('role', 'menu'); pw.append(mn);
+        const RK = ['basse', 'normale', 'haute'], cur = () => ins.find(x => x.checked)?.value || 'normale';
+        const fill = () => { const c = RK.indexOf(cur()), up = c === 2 ? 'normale' : 'haute', dn = c === 0 ? 'normale' : 'basse', nm = v => esc(ins.find(x => x.value === v).nextElementSibling.textContent); mn.innerHTML = `<button type="button" role="menuitem" class="pup p-${up}" data-v="${up}">${nm(up)}</button><button type="button" role="menuitem" class="pdn p-${dn}" data-v="${dn}">${nm(dn)}</button>`; };
+        const out = e => { if (!pw.contains(e.target)) shut(); }, shut = () => { mn.hidden = true; document.removeEventListener('pointerdown', out, true); };
+        const choose = v => { const x = ins.find(x => x.value === v); if (!x) return; x.checked = true; picked = true; lab(); shut(); x.dispatchEvent(new Event('change', { bubbles: true })); };
+        const open = () => { if (!picked) { const nm = ins.find(x => x.value === 'normale'); if (nm) nm.checked = true; picked = true; lab(); nm?.dispatchEvent(new Event('change', { bubbles: true })); } fill(); mn.hidden = false; { const u = mn.querySelector('.pup'), fx = document.querySelector('.head .fx'); if (u && fx) { const a = u.getBoundingClientRect(), b = fx.getBoundingClientRect(); if (a.right > b.left - 4 && a.left < b.right && a.top < b.bottom && a.bottom > b.top) u.style.transform = `translateX(${Math.round(b.left - 4 - a.right)}px)`; } } document.addEventListener('pointerdown', out, true); }; // Haute ne recouvre jamais la croix Fermer.
+        let wasOpen = false, moved = false;
+        btn.addEventListener('mousedown', e => e.preventDefault()); mn.addEventListener('mousedown', e => e.preventDefault());
+        btn.addEventListener('pointerdown', e => { e.preventDefault(); wasOpen = !mn.hidden; moved = false; if (!wasOpen) open(); try { btn.releasePointerCapture(e.pointerId); } catch (_) {} });
+        pw.addEventListener('pointermove', () => { moved = true; });
+        pw.addEventListener('pointerup', e => { const t = document.elementFromPoint(e.clientX, e.clientY), o = t?.closest('.prm button'); if (o && mn.contains(o)) { e.preventDefault(); return choose(o.dataset.v); } if (t?.closest('.prb') && wasOpen) shut(); });
+        btn.onclick = e => { e.preventDefault(); if (e.detail === 0) { if (mn.hidden) open(); else shut(); } };
+        mn.onclick = e => { const o = e.target.closest('button'); if (o) { e.preventDefault(); choose(o.dataset.v); } }; } } }
     const raw = e => e.innerText.replace(/\u00a0/g, ' ').replace(/\n/g, '');
     const fits = x => cx.measureText(x).width <= t1.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     const join = () => { const a = raw(t1), b = raw(t2); return b ? a.replace(/\s+$/, '') + (t2.dataset.cut ? '' : ' ') + b.replace(/^\s+/, '') : a; };
@@ -197,7 +206,7 @@ export async function view(app, { id }) {
   // Photos choisies : nombre affiché dans la zone d'ajout.
   const ph = $('#f [name=photos]');
   const strip = $('#f .pstrip');
-  const picked = ph ? photoTray(ph, $('#f .ptray'), f => { $('#f .padd').hidden = f.length >= 10; requestAnimationFrame(() => strip.scrollTo({ left: strip.scrollWidth, behavior: 'smooth' })); }) : [];
+  const picked = ph ? photoTray(ph, $('#f .ptray'), f => { $('#f .padd').hidden = f.length >= 10; requestAnimationFrame(() => { const t = $('#f .ptray'); t?.scrollTo({ left: t.scrollWidth, behavior: 'smooth' }); strip.scrollTo({ left: strip.scrollWidth, behavior: 'smooth' }); }); }) : [];
 
   // Lot 87 : croix de fermeture (création). Non vide dès qu'un champ diffère de sa valeur par défaut.
   const snap = () => JSON.stringify(formData($('#f'))) + '|' + picked.length;

@@ -1,7 +1,7 @@
 // Labo : point d'entrée réduit à la fonctionnalité « Nouvelle intervention » (liste + fenêtre de création).
-import { state, loadMember } from './state.js?v=1795022152';
-import { sb } from './sb.js?v=1795022152';
-import * as list from './views/list.js?v=1795022152';
+import { state, loadMember } from './state.js?v=1795024118';
+import { sb } from './sb.js?v=1795024118';
+import * as list from './views/list.js?v=1795024118';
 
 const app = document.getElementById('app');
 const MOB = new URLSearchParams(location.search).get('m') === '1';
