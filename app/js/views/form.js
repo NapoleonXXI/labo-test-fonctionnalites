@@ -1,9 +1,9 @@
-import { sb } from '../sb.js?v=1795012013';
-import { state, isManager, role, memberName } from '../state.js?v=1795012013';
-import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795012013';
-import { uploadPhotos, photoTray } from '../photos.js?v=1795012013';
-import { slotTxt, table } from './list.js?v=1795012013';
-import { go } from '../app.js?v=1795012013';
+import { sb } from '../sb.js?v=1795012670';
+import { state, isManager, role, memberName } from '../state.js?v=1795012670';
+import { $, esc, toast, errMsg, busy, formData, PRIORITY, cef, initCef, sbar, WRENCH, BRIEFCASE, padMH, CLOCK, fmtAgo } from '../ui.js?v=1795012670';
+import { uploadPhotos, photoTray } from '../photos.js?v=1795012670';
+import { slotTxt, table } from './list.js?v=1795012670';
+import { go } from '../app.js?v=1795012670';
 
 // Création / modification d'une intervention (gestionnaires).
 export async function view(app, { id }) {
@@ -76,9 +76,13 @@ export async function view(app, { id }) {
       { const tech = document.body.classList.contains('tech'), pw = document.createElement('div'); pw.className = tech ? 'prw prv' : 'prw'; pr.before(pw); pw.innerHTML = '<button type="button" class="prb">Priorité</button>'; pw.append(pr);
         const bs = pr.querySelector('input[value=basse] + span'); if (bs) bs.textContent = 'Faible';
         // Lot 117.1 : plus de menu ; chaque appui passe à la priorité suivante (Faible → Normale → Haute → Faible), avec sa couleur.
-        let picked = !!id; const btn = pw.querySelector('.prb'), ins = [...pr.querySelectorAll('input')];
-        const lab = () => { const c = ins.find(x => x.checked), v = picked && c ? c.nextElementSibling.textContent : ''; btn.className = 'prb' + (v ? ' pk p-' + c.value : ''); btn.innerHTML = v ? (tech ? `<small>Priorité</small><span>${v}</span>` : `<span>${v}</span><svg class="prar" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4l2.5 2.5L7.5 4"/></svg>`) : 'Priorité'; }; // Lot 4 : en standard, valeur choisie + petite flèche. lab();
-        btn.addEventListener('pointerdown', e => e.preventDefault()); btn.addEventListener('mousedown', e => e.preventDefault()); btn.onclick = e => { e.preventDefault(); const y = scrollY; requestAnimationFrame(() => { if (scrollY !== y) scrollTo(0, y); }); const k = ins.findIndex(x => x.checked); (ins[picked ? (k + 1) % ins.length : 0]).checked = true; picked = true; lab(); }; } } }
+        const AR = '<svg class="prar" width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 4l2.5 2.5L7.5 4"/></svg>'; let picked = !!id; const btn = pw.querySelector('.prb'), ins = [...pr.querySelectorAll('input')];
+        const lab = () => { const c = ins.find(x => x.checked), v = picked && c ? c.nextElementSibling.textContent : ''; btn.className = 'prb' + (v ? ' pk p-' + c.value : ''); btn.innerHTML = v ? (tech ? `<small>Priorité</small><span>${v}</span>` : `<span>${v}</span>${AR}`) : (tech ? 'Priorité' : `<span>Priorité</span>${AR}`); }; lab(); /* Lot 5 : en standard, flèche dès le départ. */
+        btn.addEventListener('pointerdown', e => e.preventDefault()); btn.addEventListener('mousedown', e => e.preventDefault()); if (!tech) { const mn = document.createElement('div'); mn.className = 'prm'; mn.hidden = true; mn.setAttribute('role', 'menu'); mn.innerHTML = ins.map(x => `<button type="button" role="menuitem" class="p-${x.value}" data-v="${x.value}">${esc(x.nextElementSibling.textContent)}</button>`).join(''); pw.append(mn); // Lot 5 : en standard, petit menu Faible / Normale / Haute sous le bouton.
+          const shut = () => { mn.hidden = true; document.removeEventListener('pointerdown', out, true); }, out = e => { if (!pw.contains(e.target)) shut(); };
+          mn.addEventListener('mousedown', e => e.preventDefault()); mn.onclick = e => { const b = e.target.closest('button'); if (!b) return; e.preventDefault(); ins.find(x => x.value === b.dataset.v).checked = true; picked = true; lab(); shut(); };
+          btn.onclick = e => { e.preventDefault(); if (!mn.hidden) return shut(); mn.hidden = false; document.addEventListener('pointerdown', out, true); }; }
+        else btn.onclick = e => { e.preventDefault(); const y = scrollY; requestAnimationFrame(() => { if (scrollY !== y) scrollTo(0, y); }); const k = ins.findIndex(x => x.checked); (ins[picked ? (k + 1) % ins.length : 0]).checked = true; picked = true; lab(); }; } } }
     const raw = e => e.innerText.replace(/\u00a0/g, ' ').replace(/\n/g, '');
     const fits = x => cx.measureText(x).width <= t1.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     const join = () => { const a = raw(t1), b = raw(t2); return b ? a.replace(/\s+$/, '') + (t2.dataset.cut ? '' : ' ') + b.replace(/^\s+/, '') : a; };
@@ -207,7 +211,7 @@ export async function view(app, { id }) {
     if (r === 'draft') $('#f').requestSubmit(dr); else if (r === 'quit') leave(false);
   };
   // Lot 4 : Annuler demande la même confirmation que la croix Fermer, pour tous les profils.
-  { const an = $('#f .nactions a.btn'); if (an && fx) an.onclick = e => { e.preventDefault(); fx.onclick(); }; }
+  { const an = $('#f .nactions a.btn'); if (an && fx) an.onclick = e => { e.preventDefault(); e.stopPropagation(); fx.onclick(); }; }
 
   // Lieu : numéros → mobil-homes (« 34 » → 34, 134, 234…) ; texte → lieux prédéfinis. Le texte libre est gardé tel quel.
   const COMMON = ['Réception', 'Camp saisonnier', 'Sanitaire 1', 'Sanitaire 2', 'Scène', 'Restaurant', 'Bar', 'Piscine', 'Aire de jeux', 'Parking', 'Local technique', 'Laverie', 'Épicerie', 'Snack', 'Spa', 'Salle de sport', 'Terrain multisport', 'Mini-golf', 'Accueil', 'Entrée / barrière', 'Lingerie', 'Cuisine du restaurant', 'Salle commune'];
@@ -310,7 +314,7 @@ export async function view(app, { id }) {
         pb.disabled = (st < 2 || f.classList.contains('ed1')) && !ok1(d) || st > 2 && (!d.passage || (sl && (!f.slot_d?.value || !a || (b && b <= a))));
         const db = f.querySelector('button[value=brouillon]'); if (db) db.disabled = !(d.title || '').trim() && !(d.location || '').trim(); };
       ['input', 'change', 'keyup'].forEach(t => f.addEventListener(t, () => setTimeout(chk), true));
-      f.addEventListener('click', e => { if (e.target.closest('.prb, .ac-list')) setTimeout(chk, 30); }, true);
+      f.addEventListener('click', e => { if (e.target.closest('.prb, .prm, .ac-list')) setTimeout(chk, 30); }, true);
       document.querySelector('.wsheet')?.addEventListener('click', () => setTimeout(chk, 60), true); // Lot 117.8 : la feuille créneau est hors du formulaire.
       // Lot 117.2 : étapes. Suivant (bloc 1) : le bloc 1 se résume en carte comme dans la liste, le bloc 2 (description) apparaît ; Suivant (bloc 2, description facultative) : le bloc 3 apparaît.
       pb.addEventListener('click', e => { if (st > 2) return; e.preventDefault(); if (pb.disabled) return; const d = formData(f);
@@ -412,7 +416,7 @@ const tIn = v => { if (!v) return ''; const x = new Date(v); return `${p2(x.getH
 function quitBox(draft) {
   return new Promise(res => {
     const o = document.createElement('div'); o.className = 'modal';
-    o.innerHTML = `<div class="mbox"><p class="mq">Voulez-vous quitter la création d'une nouvelle intervention ?</p><div class="mbtns mb3">${draft ? '<button class="primary" data-r="draft">Enregistrer en brouillon</button>' : ''}<button class="ghost" data-r="quit">Quitter sans enregistrer</button><button class="ghost" data-r="">Annuler</button></div></div>`;
+    o.innerHTML = `<div class="mbox"><p class="mq">Voulez-vous quitter la création d'une nouvelle intervention ?</p><div class="mbtns mb3">${draft ? '<button class="primary" data-r="draft">Enregistrer en brouillon</button>' : ''}<button class="ghost" data-r="quit">Quitter sans enregistrer</button><button class="ghost" data-r="">Continuer la saisie</button></div></div>`;
     (document.querySelector('#shell') || document.body).appendChild(o);
     o.onclick = e => { const b = e.target.closest('button'); if (!b && e.target !== o) return; o.remove(); res(b?.dataset.r || ''); };
   });
