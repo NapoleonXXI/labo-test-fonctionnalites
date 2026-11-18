@@ -25,11 +25,12 @@ select.rp{border:0;font:inherit;font-size:14px;font-weight:500;cursor:pointer}
 </head>
 <body>
 <div class="bar">
-  <div id="lotv">Lot 2</div>
+  <div id="lotv">Lot 3</div>
   <div class="sw" role="group" aria-label="Affichage"><button type="button" data-m="0" aria-pressed="true">Standard</button><button type="button" data-m="1" aria-pressed="false">Mobile</button></div>
   <select class="rp" id="role" aria-label="Rôle"><option value="responsable_tech">Responsable technique</option><option value="technicien">Technicien</option><option value="reception">Réceptionniste</option></select>
   <a class="rp" id="full" href="app/lab.html?m=0" target="_blank">Ouvrir en plein écran</a>
   <a class="rp" href="./">Rapport</a>
+  <a class="rp" href="elements.html">Éléments graphiques et textuels</a>
 </div>
 <div id="stage"></div>
 <script>
@@ -40,7 +41,7 @@ sel.onchange = () => { localStorage.setItem('labo:r', sel.value); show(); };
 function show() {
   document.querySelectorAll('.sw button').forEach(b => b.setAttribute('aria-pressed', b.dataset.m === M));
   stage.className = M === '1' ? 'mob' : 'std';
-  const src = `app/lab.html?m=${M}&r=${sel.value}&v=1795007397`; document.getElementById('full').href = src;
+  const src = `app/lab.html?m=${M}&r=${sel.value}&v=1795010732`; document.getElementById('full').href = src;
   stage.innerHTML = M === '1'
     ? `<div class="phone"><iframe src="${src}" title="Nouvelle intervention, vue mobile"></iframe></div>`
     : `<iframe src="${src}" title="Nouvelle intervention, vue standard"></iframe>`;

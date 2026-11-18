@@ -23,7 +23,8 @@
       "capture": "captures/003.png",
       "versions": "Mobile 390, tous rôles",
       "suggestion": "Placer Nouvelle intervention, Suivant et Créer et publier en bas d'écran, à portée du pouce, avec 44 px de haut.",
-      "commentaire": "Mobile 390, tous rôles. Placer Nouvelle intervention, Suivant et Créer et publier en bas d'écran, à portée du pouce, avec 44 px de haut."
+      "commentaire": "Mobile 390, tous rôles. Placer Nouvelle intervention, Suivant et Créer et publier en bas d'écran, à portée du pouce, avec 44 px de haut.",
+      "suggestion_capture": "captures/s003.png"
     },
     {
       "id": 3,
@@ -32,7 +33,8 @@
       "capture": "captures/004.png",
       "versions": "Mobile et standard, tous rôles",
       "suggestion": "Afficher la photo entière partout, comme sur la version déjà corrigée. Garder la croix à sa taille actuelle.",
-      "commentaire": "Mobile et standard, tous rôles. Afficher la photo entière partout, comme sur la version déjà corrigée. Garder la croix à sa taille actuelle."
+      "commentaire": "Mobile et standard, tous rôles. Afficher la photo entière partout, comme sur la version déjà corrigée. Garder la croix à sa taille actuelle.",
+      "suggestion_capture": "captures/s004.png"
     },
     {
       "id": 4,
@@ -50,7 +52,8 @@
       "capture": "captures/006.png",
       "versions": "Responsable technique, mobile et standard",
       "suggestion": "Garder la mise en avant du profil choisi, mais ouvrir la liste sans recouvrir les autres champs, avec des noms plus contrastés.",
-      "commentaire": "Responsable technique, mobile et standard. Garder la mise en avant du profil choisi, mais ouvrir la liste sans recouvrir les autres champs, avec des noms plus contrastés."
+      "commentaire": "Responsable technique, mobile et standard. Garder la mise en avant du profil choisi, mais ouvrir la liste sans recouvrir les autres champs, avec des noms plus contrastés.",
+      "suggestion_capture": "captures/s006.png"
     },
     {
       "id": 6,
@@ -59,7 +62,8 @@
       "capture": "captures/007.png",
       "versions": "Standard 1024 (technicien), même champ pour tous les rôles",
       "suggestion": "Afficher les suggestions dans la fenêtre sans couvrir Suivant : par exemple Suivant fixé en bas de la fenêtre, suggestions défilantes au-dessus.",
-      "commentaire": "Standard 1024 (technicien), même champ pour tous les rôles. Afficher les suggestions dans la fenêtre sans couvrir Suivant : par exemple Suivant fixé en bas de la fenêtre, suggestions défilantes au-dessus."
+      "commentaire": "Standard 1024 (technicien), même champ pour tous les rôles. Afficher les suggestions dans la fenêtre sans couvrir Suivant : par exemple Suivant fixé en bas de la fenêtre, suggestions défilantes au-dessus.",
+      "suggestion_capture": "captures/s007.png"
     },
     {
       "id": 7,
@@ -68,7 +72,8 @@
       "capture": "captures/008.png",
       "versions": "Standard, tous rôles (mobile conservé)",
       "suggestion": "Garder ce sélecteur en mobile. En standard, afficher la valeur choisie avec une petite flèche signalant d'autres options.",
-      "commentaire": "Standard, tous rôles (mobile conservé). Garder ce sélecteur en mobile. En standard, afficher la valeur choisie avec une petite flèche signalant d'autres options."
+      "commentaire": "Standard, tous rôles (mobile conservé). Garder ce sélecteur en mobile. En standard, afficher la valeur choisie avec une petite flèche signalant d'autres options.",
+      "suggestion_capture": "captures/s008.png"
     }
   ]
 }
