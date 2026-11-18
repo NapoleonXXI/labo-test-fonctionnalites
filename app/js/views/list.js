@@ -1,8 +1,8 @@
-import { sb } from '../sb.js?v=1795007280';
-import { state, assigneeName, isManager, isRealAdmin, memberName, role, ROLE_NAMES, compactName, roleKind } from '../state.js?v=1795007280';
-import { $, $$, esc, errMsg, statusPill, fmtCreated, fmtAgo, fmtDate, fmtDateTime, PRIORITY, WRENCH, BRIEFCASE, STATUS, ROLES, CLOCK, confirmBox, toast, n2, stackSticky, ACTMSG } from '../ui.js?v=1795007280';
-import { go, render } from '../app.js?v=1795007280';
-import * as form from './form.js?v=1795007280';
+import { sb } from '../sb.js?v=1795007397';
+import { state, assigneeName, isManager, isRealAdmin, memberName, role, ROLE_NAMES, compactName, roleKind } from '../state.js?v=1795007397';
+import { $, $$, esc, errMsg, statusPill, fmtCreated, fmtAgo, fmtDate, fmtDateTime, PRIORITY, WRENCH, BRIEFCASE, STATUS, ROLES, CLOCK, confirmBox, toast, n2, stackSticky, ACTMSG } from '../ui.js?v=1795007397';
+import { go, render } from '../app.js?v=1795007397';
+import * as form from './form.js?v=1795007397';
 
 // Liste unique (lot 13) : mes interventions, signalées, prises par les autres, brouillons, puis terminées repliées.
 const STATUSES = ['publiee', 'prise_en_charge', 'resolue', 'validee'];
@@ -176,7 +176,7 @@ async function load(f, searching) {
     ['brouillon', 'Brouillons', open.filter(r => r.status === 'brouillon')],
     // Lot 60 : les terminées ont leur propre page (restent trouvables par la recherche).
     ...(searching ? [['resolue', 'Terminées', data.filter(r => ['resolue', 'validee'].includes(r.status))]] : []),
-  ].filter(([k, , rows]) => (k !== 'mes' || rows.length) && (k !== 'prog' || rows.length) && (k !== 'dem' || dem) && (k !== 'brouillon' || isManager() || role() === 'technicien'));
+  ].filter(([k, , rows]) => (k !== 'mes' || rows.length) && k !== 'prog' && (k !== 'dem' || dem) && (k !== 'brouillon' || isManager() || role() === 'technicien'));
   // Lot 83 : mobile, l'onglet des programmées tout en bas du feed.
   if (mob) { const i = groups.findIndex(g => g[0] === 'prog'); if (i >= 0) groups.push(...groups.splice(i, 1)); }
   if (DONE) {
@@ -239,7 +239,7 @@ async function load(f, searching) {
   // Lot 61 : vue standard, le détail se déplie sous sa carte (même largeur) au lieu d'ouvrir une page.
   const inl = !searching && !document.body.classList.contains('tech') && innerWidth > 600 && role() !== 'client';
   // Lot 71 : module du détail préchargé, données lancées dès l'appui (pointerdown).
-  const dmod = import('./detail.js?v=1795007280');
+  const dmod = import('./detail.js?v=1795007397');
   $$('#rows tr[data-id]').forEach(tr => tr.addEventListener('pointerdown', () => { if (!tr.classList.contains('xopen')) dmod.then(m => m.prefetch(tr.dataset.id)); }));
   { const ids = $$('#rows tr[data-id]').map(t => t.dataset.id); setTimeout(() => dmod.then(m => m.warm(ids)), 300); }
   qaInit();
@@ -463,7 +463,7 @@ const qRun = async (id, a, quiet) => {
   const { error } = a === 'demander' ? await sb.rpc('request_transfer', { p_id: id }) : await sb.rpc('transition', { p_id: id, p_action: a, p_comment: '' });
   if (error) return toast(errMsg(error), true);
   // Lot 111 : « Intervention terminée » animée aussi depuis les étiquettes de la carte.
-  if (a === 'resoudre') return (await import('./detail.js?v=1795007280')).doneScreen('Intervention terminée', render);
+  if (a === 'resoudre') return (await import('./detail.js?v=1795007397')).doneScreen('Intervention terminée', render);
   if (!quiet && a !== 'prendre') toast(ACTMSG(a)); render(); // Lot 116 : prise par appui long sans message.
 };
 function qaInit() { // Lot 132 : appui long sur toute la carte (vue mobile, réelle et simulée).
